@@ -8,10 +8,13 @@
         public DateTime EndTime { get; set; }
         public string Description { get; set; } = null!;
 
-        public Guid ModuleID { get; set; } // Foreign key
+        //public Guid ModuleID { get; set; } // Foreign key
+        public Guid ActivityTypeID { get; set; } // Foreign key
+
 
         // Navigation property
-        public Module Module { get; set; } = null!;
+        //public Module Module { get; set; } = null!;
+        public ActivityType ActivityType { get; set; } = null!;
 
     }
 }
