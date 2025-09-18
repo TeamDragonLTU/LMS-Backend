@@ -34,6 +34,12 @@ public class DataSeedHostingService : IHostedService
         if (!env.IsDevelopment()) return;
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        if (!await context.Courses.AnyAsync())
+        {
+            await AddCourseToDB(context);
+        }
+
         if (await context.Users.AnyAsync(cancellationToken)) return;
 
         userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -113,5 +119,18 @@ public class DataSeedHostingService : IHostedService
         }
     }
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    public async Task AddCourseToDB(ApplicationDbContext context)
+    {
+        var course = new Course
+        {
+            Name = "Test Course",
+            Description = "This is a test course",
+            StartDate = DateTime.UtcNow
+        };
+
+        context.Courses.Add(course);
+        await context.SaveChangesAsync();
+    }
 
 }
