@@ -3,7 +3,7 @@ using Service.Contracts;
 
 namespace LMS.API
 {
-    [Route("api/[controller]")]
+    [Route("api/course")]
     [ApiController]
     [Produces("application/json")]
     public class CourseController : ControllerBase
