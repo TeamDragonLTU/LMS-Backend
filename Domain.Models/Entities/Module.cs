@@ -23,10 +23,10 @@ namespace Domain.Models.Entities
         public DateTime EndDate { get; set; }
 
         // Foreign key
-        public int CourseId { get; set; }
-        public Course Course { get; set; } = null!;
-        public ICollection<Activity> Activities { get; set; } = new List<Activity>();
-        public ICollection<Document> Documents { get; set; } = new List<Document>();
+        //public int CourseId { get; set; }
+        //public Course Course { get; set; } = null!;
+        //public ICollection<Activity> Activities { get; set; } = new List<Activity>();
+        //public ICollection<Document> Documents { get; set; } = new List<Document>();
 
     }
 }

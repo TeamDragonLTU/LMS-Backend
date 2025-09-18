@@ -3,6 +3,6 @@
 public interface IUnitOfWork
 {
     ICourseRepository Courses { get; }
-    IModuleRepository ModuleRepository { get; }
+    IModuleRepository Modules { get; }
     Task CompleteAsync();
 }

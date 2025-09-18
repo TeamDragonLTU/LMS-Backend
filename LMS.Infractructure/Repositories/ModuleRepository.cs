@@ -3,11 +3,6 @@ using Domain.Models.Entities;
 using LMS.Infractructure.Data;
 using LMS.Infractructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LMS.Infrastructure.Repositories
 {

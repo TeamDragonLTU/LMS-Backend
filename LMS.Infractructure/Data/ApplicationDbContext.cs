@@ -17,18 +17,18 @@ namespace LMS.Infractructure.Data
             : base(options)
         {
         }
-        public DbSet<Module> Module { get; set; } 
+        public DbSet<Module> Modules { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new ApplicationUserConfigurations());
             // Help needed
-            builder.Entity<Module>() 
+            /*builder.Entity<Module>() 
                 .HasOne(m => m.Course)
                 .WithMany(k => k.Module) 
                 .HasForeignKey(m => m.CourseID)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade);*/
         }
     }
 }
