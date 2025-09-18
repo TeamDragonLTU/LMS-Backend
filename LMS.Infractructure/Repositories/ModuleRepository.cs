@@ -13,22 +13,20 @@ namespace LMS.Infrastructure.Repositories
 {
     public class ModuleRepository : RepositoryBase<Module>, IModuleRepository
     {
-        private readonly ApplicationDbContext _context;
-
+       
         public ModuleRepository(ApplicationDbContext context) : base(context)
         {
-            _context = context;
+           
         }
 
         public async Task<Module?> GetModuleAsync(int moduleId)
         {
-            return await _context.Module
-                .FirstOrDefaultAsync(m => m.Id == moduleId);
+            return await FindAll().FirstOrDefaultAsync(m => m.Id == moduleId);
         }
 
         public async Task<IEnumerable<Module>> GetAllModulesAsync()
         {
-            return await _context.Module.ToListAsync();
+            return await FindAll().ToListAsync();
         }
         
     }
