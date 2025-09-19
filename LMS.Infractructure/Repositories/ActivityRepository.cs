@@ -7,16 +7,11 @@ namespace LMS.Infractructure.Repositories
 {
     public class ActivityRepository : RepositoryBase<Activity>, IActivityRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public ActivityRepository(ApplicationDbContext context) : base(context)
-        {
-            _context = context;
-        }
+        public ActivityRepository(ApplicationDbContext context) : base(context) { }
 
         public async Task<Activity?> GetActivityById(Guid id)
         {
-            return await _context.Activities.FirstOrDefaultAsync(a => a.Id == id);
+            return await FindAll().FirstOrDefaultAsync(a => a.Id == id);
 
         }
 
