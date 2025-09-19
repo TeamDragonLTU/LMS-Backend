@@ -14,7 +14,7 @@ namespace LMS.Infrastructure.Repositories
            
         }
 
-        public async Task<Module?> GetModuleAsync(int moduleId)
+        public async Task<Module?> GetModuleAsync(Guid moduleId)
         {
             return await FindAll().FirstOrDefaultAsync(m => m.Id == moduleId);
         }
@@ -23,6 +23,5 @@ namespace LMS.Infrastructure.Repositories
         {
             return await FindAll().ToListAsync();
         }
-        
     }
 }

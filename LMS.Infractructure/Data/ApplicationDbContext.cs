@@ -12,12 +12,13 @@ namespace LMS.Infractructure.Data
 
 
         public DbSet<Course> Courses { get; set; }
+        public DbSet<Module> Modules { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
-        public DbSet<Module> Modules { get; set; } 
+      
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -12,7 +12,7 @@ namespace Domain.Models.Entities
     public class Module
     {
        
-        public int Id { get; set; }
+        public Guid Id { get; set; }
   
         [StringLength(100)]
         public required string Name { get; set; } = string.Empty;

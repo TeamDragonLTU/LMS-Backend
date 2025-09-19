@@ -10,7 +10,7 @@ namespace Service.Contracts
 {
     public interface IModuleService
     {
-        Task<ModuleDto?> GetModuleAsync(int moduleId);
+        Task<ModuleDto?> GetModuleAsync(Guid moduleId);
         Task<IEnumerable<ModuleDto>> GetAllModulesAsync();
     }
 }

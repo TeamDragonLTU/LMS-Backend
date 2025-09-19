@@ -9,7 +9,7 @@ namespace LMS.Shared.DTOs.Module
 {
     public class ModuleDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(100)]
