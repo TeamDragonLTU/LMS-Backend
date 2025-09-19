@@ -39,7 +39,10 @@ public class DataSeedHostingService : IHostedService
         {
             await AddCourseToDB(context);
         }
-
+        if (!await context.Modules.AnyAsync())
+        {
+            await AddModuleToDB(context);
+        }
         if (await context.Users.AnyAsync(cancellationToken)) return;
 
         userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -170,6 +173,20 @@ public class DataSeedHostingService : IHostedService
         };
 
         context.Courses.Add(course);
+        await context.SaveChangesAsync();
+    }
+    public async Task AddModuleToDB(ApplicationDbContext context)
+    {
+        var module = new Module
+        {
+            Name = "Sample Module", 
+            Description = "This is a sample module", 
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddMonths(1),
+           
+        };
+
+        context.Modules.Add(module);
         await context.SaveChangesAsync();
     }
 

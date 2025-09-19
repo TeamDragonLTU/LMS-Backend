@@ -1,5 +1,6 @@
 ﻿using LMS.Infractructure.Data;
 using LMS.Infractructure.Repositories;
+using LMS.Infrastructure.Repositories;
 using LMS.Presentation;
 using LMS.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -83,6 +84,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<IModuleRepository, ModuleRepository>();
     }
 
     public static void AddServiceLayer(this IServiceCollection services)
@@ -91,8 +93,10 @@ public static class ServiceExtensions
 
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICourseService, CourseService>();
+        services.AddScoped<IModuleService, ModuleService>();
 
         services.AddScoped(provider => new Lazy<IAuthService>(() => provider.GetRequiredService<IAuthService>()));
         services.AddScoped(provider => new Lazy<ICourseService>(() => provider.GetRequiredService<ICourseService>()));
+        services.AddScoped(provider => new Lazy<IModuleService>(() => provider.GetRequiredService<IModuleService>()));
     }
 }
