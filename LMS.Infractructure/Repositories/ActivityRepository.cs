@@ -9,7 +9,7 @@ namespace LMS.Infractructure.Repositories
     {
         public ActivityRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<Activity?> GetActivityById(Guid id)
+        public async Task<Activity?> GetActivityByIdAsync(Guid id)
         {
             return await FindAll().FirstOrDefaultAsync(a => a.Id == id);
 

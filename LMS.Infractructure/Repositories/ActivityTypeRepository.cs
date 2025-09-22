@@ -9,7 +9,7 @@ namespace LMS.Infractructure.Repositories
     {
         public ActivityTypeRepository(ApplicationDbContext context) : base(context) { }
 
-        public async Task<IEnumerable<ActivityType>> GetAllActivityTypes()
+        public async Task<IEnumerable<ActivityType>> GetAllActivityTypesAsync()
         {
             return await FindAll().ToListAsync();
         }

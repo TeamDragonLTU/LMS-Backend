@@ -7,6 +7,6 @@ namespace Domain.Contracts.Repositories
     {
         //Task<IEnumerable<Activity>> GetActivitiesByModuleAsync(int moduleId, bool trackChanges = false);
 
-        Task<Activity?> GetActivityById(Guid id);
+        Task<Activity?> GetActivityByIdAsync(Guid id);
     }
 }

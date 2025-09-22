@@ -5,6 +5,6 @@ namespace Domain.Contracts.Repositories
     public interface IActivityTypeRepository : IRepositoryBase<ActivityType>
     {
 
-        Task<IEnumerable<ActivityType>> GetAllActivityTypes();
+        Task<IEnumerable<ActivityType>> GetAllActivityTypesAsync();
     }
 }
