@@ -56,6 +56,11 @@ public class DataSeedHostingService : IHostedService
             await AddRolesAsync([TeacherRole, StudentRole]);
             await AddDemoUsersAsync();
             await AddUsersAsync(20);
+            var activityTypes = GetActivityTypes();
+            context.AddRange(activityTypes);
+            var activities = GetActivities(activityTypes);
+            context.AddRange(activities);
+            await context.SaveChangesAsync();
             logger.LogInformation("Seed complete");
         }
         catch (Exception ex)
@@ -63,6 +68,41 @@ public class DataSeedHostingService : IHostedService
             logger.LogError($"Data seed fail with error: {ex.Message}");
             throw;
         }
+    }
+
+    private List<Activity> GetActivities(List<ActivityType> activityTypes)
+    {
+        DateTime dateTime = DateTime.UtcNow;
+
+        var faker = new Faker<Activity>().Rules((faker, activity) =>
+        {
+            activity.Name = faker.Commerce.ProductName();
+            activity.Description = faker.Commerce.ProductDescription();
+            activity.StartTime = faker.Date.Past(1, dateTime);
+            activity.EndTime = faker.Date.Future(1, dateTime);
+            activity.ActivityType = activityTypes[faker.Random.Int(0, activityTypes.Count - 1)];
+
+        });
+
+        return faker.Generate(3);
+
+    }
+
+    private List<ActivityType> GetActivityTypes()
+    {
+        var activityTypes = new List<ActivityType>()
+        {
+            new ActivityType
+            {
+                 Name = "Lecture"
+            },
+            new ActivityType
+            {
+                 Name = "Assignment"
+            }
+        };
+
+        return activityTypes;
     }
 
     private async Task AddRolesAsync(string[] rolenames)
@@ -83,7 +123,7 @@ public class DataSeedHostingService : IHostedService
             UserName = "teacher@test.com",
             Email = "teacher@test.com"
         };
-        
+
         var student = new ApplicationUser
         {
             UserName = "student@test.com",
