@@ -1,5 +1,6 @@
 ﻿using Domain.Contracts.Repositories;
 using LMS.Infractructure.Data;
+using LMS.Infrastructure.Repositories;
 
 namespace LMS.Infractructure.Repositories;
 public class UnitOfWork : IUnitOfWork
