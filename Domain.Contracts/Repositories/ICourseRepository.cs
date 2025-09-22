@@ -6,6 +6,8 @@ namespace Domain.Contracts.Repositories
     {
         Task<IEnumerable<Course>> GetCoursesAsync();
         Task<Course?> GetCourseAsync(Guid id);
+        Task<bool> AnyCourseAsync(Guid id);
+        Task<int> CourseCountAsync();
 
     }
 }

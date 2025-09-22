@@ -18,7 +18,17 @@ namespace LMS.Infractructure.Repositories
 
         public async Task<Course?> GetCourseAsync(Guid id)
         {
-            return await FindByCondition(m => m.Id == id).FirstOrDefaultAsync();                     
+            return await FindByCondition(c => c.Id == id).FirstOrDefaultAsync();                     
+        }
+
+        public async Task<bool> AnyCourseAsync(Guid id)
+        {
+            return await FindAll().AnyAsync(c => c.Id == id);
+        }
+
+        public async Task<int> CourseCountAsync()
+        {
+            return await FindAll().CountAsync();
         }
     }
 }
