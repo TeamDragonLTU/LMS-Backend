@@ -10,5 +10,11 @@ public class ApplicationUserConfigurations : IEntityTypeConfiguration<Applicatio
     {
         builder.ToTable("ApplicationUser");
         //Add more configurations here
+
+        builder
+            .HasOne(u => u.Course)
+            .WithMany(c => c.Users)
+            .HasForeignKey(u => u.CourseId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
