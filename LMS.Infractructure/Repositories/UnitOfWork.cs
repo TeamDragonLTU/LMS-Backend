@@ -18,13 +18,13 @@ public class UnitOfWork : IUnitOfWork
 
 
 
-    public UnitOfWork(ApplicationDbContext context)
+    public UnitOfWork(Lazy<ICourseRepository> courseRepository, Lazy<IModuleRepository> moduleRepository, Lazy<IActivityRepository> activityRepository, Lazy<IActivityTypeRepository> activityTypeRepository)
     {
-        _courseRepository = new Lazy<ICourseRepository>(() => new CourseRepository(context));
-        _activityRepository = new Lazy<IActivityRepository>(() => new ActivityRepository(context));
-        _activityTypeRepository = new Lazy<IActivityTypeRepository>(() => new ActivityTypeRepository(context));
+        _courseRepository = courseRepository;
+        _moduleRepository = moduleRepository;
+        _activityRepository = activityRepository;
+        _activityTypeRepository = activityTypeRepository;
         this.context = context ?? throw new ArgumentNullException(nameof(context));
-        _moduleRepository = new Lazy<IModuleRepository>(() => new ModuleRepository(context));
 
     }
 
