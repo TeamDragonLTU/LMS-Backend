@@ -69,5 +69,16 @@ namespace LMS.Services
             return courseDto;
         }
 
+        public async Task DeleteCourseAsync(Guid id)
+        {
+            var course = await _unitOfWork.Courses.GetCourseAsync(id);
+
+            if (course == null)
+                throw new CourseNotFoundException(id);
+
+            _unitOfWork.Courses.Delete(course);
+            await _unitOfWork.CompleteAsync();
+        }
+
     }
 }

@@ -55,5 +55,15 @@ namespace LMS.API
             return CreatedAtAction(nameof(GetCourse), new { id = courseDto.Id }, courseDto);
         }
 
+        [HttpDelete("{id}")]
+        [SwaggerOperation(Summary = "Delete course", Description = "Deletes a course by ID.")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteCourse(Guid id)
+        {
+            await _serviceManager.CourseService.DeleteCourseAsync(id);
+            return NoContent();
+        }
+
     }
 }
