@@ -5,6 +5,9 @@ namespace Service.Contracts
     public interface ICourseService
     {
         Task<IEnumerable<CourseDto>> GetAllCoursesAsync();
-        Task<CourseDto> GetMovieAsync(Guid id);
+        Task<CourseDto> GetCourseAsync(Guid id);
+        Task PutCourseAsync(Guid id, UpdateCourseDto dto);
+        //Task<CourseDto> PostMovieAsync(CreateCourseDto dto);
+        //Task DeleteMovieAsync(Guid id);
     }
 }

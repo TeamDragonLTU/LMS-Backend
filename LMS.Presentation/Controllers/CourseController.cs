@@ -31,7 +31,18 @@ namespace LMS.API
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<CourseDto>> GetCourse(Guid id)
         {
-            return Ok(await _serviceManager.CourseService.GetMovieAsync(id));
+            return Ok(await _serviceManager.CourseService.GetCourseAsync(id));
+        }
+
+        [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Update course", Description = "Updates an existing course by ID.")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+        public async Task<IActionResult> PutCourse(Guid id, [FromBody] UpdateCourseDto dto)
+        {
+            await _serviceManager.CourseService.PutCourseAsync(id, dto);
+            return NoContent();
         }
 
     }
