@@ -1,6 +1,5 @@
 ﻿using LMS.Infractructure.Data;
 using LMS.Infractructure.Repositories;
-using LMS.Infrastructure.Repositories;
 using LMS.Presentation;
 using LMS.Services;
 using Microsoft.AspNetCore.Mvc;
