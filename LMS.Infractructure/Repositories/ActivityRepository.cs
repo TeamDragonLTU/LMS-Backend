@@ -15,11 +15,11 @@ namespace LMS.Infractructure.Repositories
 
         }
 
-        //public async Task<IEnumerable<Activity>> GetActivitiesByModuleAsync(int moduleId, bool trackChanges = false)
-        //{
-        //    return await FindByCondition(a => a.ModuleId == moduleId, trackChanges)
-        //                .ToListAsync();
-        //}
+        public async Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid moduleId)
+        {
+            return await FindByCondition(a => a.ModuleID == moduleId)
+                        .ToListAsync();
+        }
 
     }
 }

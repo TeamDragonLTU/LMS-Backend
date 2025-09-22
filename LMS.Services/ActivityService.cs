@@ -23,13 +23,13 @@ namespace LMS.Services
         public async Task<ActivityDto?> GetActivityByIdAsync(Guid activityId)
         {
            return await _mapper.Map<Task<ActivityDto?>>(
-                _uow.Activities.GetActivityById(activityId)
+                _uow.Activities.GetActivityByIdAsync(activityId)
             );
         }
 
-        public async Task<IEnumerable<ActivityDto>> GetAllActivitiesForModuleAsync(Guid moduleId)
+        public async Task<IEnumerable<ActivityDto>> GetActivitiesByModuleIdAsync(Guid moduleId)
         {
-            return await _mapper.Map<Task<IEnumerable<ActivityDto>>>(_uow.Activities.GetActivitiesByModuleAsync(moduleId));
+            return await _mapper.Map<Task<IEnumerable<ActivityDto>>>(_uow.Activities.GetActivitiesByModuleIdAsync(moduleId));
         }
     }
 }

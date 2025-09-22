@@ -9,7 +9,7 @@ namespace Service.Contracts
 {
     public interface IActivityService
     {
-        Task<IEnumerable<ActivityDto>> GetAllActivitiesForModuleAsync(Guid moduleId);
+        Task<IEnumerable<ActivityDto>> GetActivitiesByModuleIdAsync(Guid moduleId);
         Task<ActivityDto?> GetActivityByIdAsync(Guid activityId);        
     }
 }
