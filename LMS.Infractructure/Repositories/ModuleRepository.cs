@@ -1,17 +1,16 @@
 ﻿using Domain.Contracts.Repositories;
 using Domain.Models.Entities;
 using LMS.Infractructure.Data;
-using LMS.Infractructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace LMS.Infrastructure.Repositories
+namespace LMS.Infractructure.Repositories
 {
     public class ModuleRepository : RepositoryBase<Module>, IModuleRepository
     {
-       
+
         public ModuleRepository(ApplicationDbContext context) : base(context)
         {
-           
+
         }
 
         public async Task<Module?> GetModuleAsync(Guid moduleId)
