@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Repositories;
+using Domain.Models.Entities;
 using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.CourseDtos;
 using Service.Contracts;
@@ -54,6 +55,18 @@ namespace LMS.Services
                     throw;
             }
 
+        }
+
+        public async Task<CourseDto> PostCourseAsync(CreateCourseDto dto)
+        {
+            var course = _mapper.Map<Course>(dto);
+            
+            _unitOfWork.Courses.Create(course);
+            await _unitOfWork.CompleteAsync();
+
+            var courseDto = _mapper.Map<CourseDto>(course);
+
+            return courseDto;
         }
 
     }

@@ -45,5 +45,15 @@ namespace LMS.API
             return NoContent();
         }
 
+        [HttpPost]
+        [SwaggerOperation(Summary = "Create course", Description = "Creates a new course.", Tags = ["Course"])]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CourseDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<CourseDto>> PostCourse(CreateCourseDto dto)
+        {
+            var courseDto = await _serviceManager.CourseService.PostCourseAsync(dto);
+            return CreatedAtAction(nameof(GetCourse), new { id = courseDto.Id }, courseDto);
+        }
+
     }
 }

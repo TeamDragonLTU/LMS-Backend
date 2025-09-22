@@ -7,7 +7,7 @@ namespace Service.Contracts
         Task<IEnumerable<CourseDto>> GetAllCoursesAsync();
         Task<CourseDto> GetCourseAsync(Guid id);
         Task PutCourseAsync(Guid id, UpdateCourseDto dto);
-        //Task<CourseDto> PostMovieAsync(CreateCourseDto dto);
-        //Task DeleteMovieAsync(Guid id);
+        Task<CourseDto> PostCourseAsync(CreateCourseDto dto);
+        //Task DeleteCourseAsync(Guid id);
     }
 }
