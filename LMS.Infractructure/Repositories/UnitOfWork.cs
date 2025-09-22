@@ -24,8 +24,6 @@ public class UnitOfWork : IUnitOfWork
         _moduleRepository = moduleRepository;
         _activityRepository = activityRepository;
         _activityTypeRepository = activityTypeRepository;
-        this.context = context ?? throw new ArgumentNullException(nameof(context));
-
     }
 
     public async Task CompleteAsync() => await context.SaveChangesAsync();
