@@ -4,6 +4,6 @@ namespace Service.Contracts
 {
     public interface ICourseService
     {
-        Task<IEnumerable<CourseDto>> GetAllCoursesAsync(bool trackChanges);
+        Task<IEnumerable<CourseDto>> GetAllCoursesAsync();
     }
 }

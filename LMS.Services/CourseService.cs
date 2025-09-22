@@ -15,9 +15,10 @@ namespace LMS.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<IEnumerable<CourseDto>> GetAllCoursesAsync(bool trackChanges)
+        public async Task<IEnumerable<CourseDto>> GetAllCoursesAsync()
         {
-            return _mapper.Map<IEnumerable<CourseDto>>(await _unitOfWork.Courses.GetCoursesAsync());
+            var courses = await _unitOfWork.Courses.GetCoursesAsync();
+            return _mapper.Map<IEnumerable<CourseDto>>(courses);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace LMS.API
         [HttpGet]
         public async Task<IActionResult> GetAllCourses()
         {
-            return Ok(await _serviceManager.CourseService.GetAllCoursesAsync(trackChanges: false));
+            return Ok(await _serviceManager.CourseService.GetAllCoursesAsync());
         }
 
     }
