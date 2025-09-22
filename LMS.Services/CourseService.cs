@@ -38,11 +38,9 @@ namespace LMS.Services
             var course = await _unitOfWork.Courses.GetCourseAsync(id, trackChanges: true);
 
             if (course == null)
-                throw new NotFoundException("Course could not be found");
+                throw new CourseNotFoundException(id);
 
             _mapper.Map(dto, course);
-
-            Console.WriteLine(course.Name);
 
             try
             {
@@ -51,12 +49,10 @@ namespace LMS.Services
             catch (Exception)
             {
                 if (!await _unitOfWork.Courses.AnyCourseAsync(id))
-                    throw new Exception("Could not save the course");
+                    throw new SaveFailureException("Could not save the course");
                 else
                     throw;
             }
-
-            //DbUpdateConcurrencyException ??
 
         }
 
