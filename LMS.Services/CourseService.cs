@@ -27,7 +27,7 @@ namespace LMS.Services
         {
             var course = await _unitOfWork.Courses.GetCourseAsync(id);
             if (course == null)
-                throw new NotFoundException("Can't find the course");
+                throw new CourseNotFoundException(id);
 
             var courseDto = _mapper.Map<CourseDto>(course);
 
