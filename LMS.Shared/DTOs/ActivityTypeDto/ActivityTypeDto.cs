@@ -8,7 +8,7 @@ namespace LMS.Shared.DTOs.ActivityTypeDto
 {
     public class ActivityTypeDto
     {
-        public Guid Id { get; init; }
-        public string Name { get; init; } = string.Empty;
+        public Guid Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }
