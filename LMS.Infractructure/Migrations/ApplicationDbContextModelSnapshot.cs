@@ -38,9 +38,6 @@ namespace Companies.Infractructure.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("ModuleID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -51,8 +48,6 @@ namespace Companies.Infractructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityTypeID");
-
-                    b.HasIndex("ModuleID");
 
                     b.ToTable("Activities");
                 });
@@ -333,15 +328,7 @@ namespace Companies.Infractructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Models.Entities.Module", "Module")
-                        .WithMany()
-                        .HasForeignKey("ModuleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ActivityType");
-
-                    b.Navigation("Module");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

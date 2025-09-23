@@ -9,17 +9,23 @@ namespace LMS.Infractructure.Repositories
     {
         public ActivityRepository(ApplicationDbContext context) : base(context) { }
 
+        public Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid moduleId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Activity?> GetActivityByIdAsync(Guid id)
         {
             return await FindAll().FirstOrDefaultAsync(a => a.Id == id);
 
         }
 
-        public async Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid moduleId)
-        {
-            return await FindByCondition(a => a.ModuleID == moduleId)
-                        .ToListAsync();
-        }
+        //public async Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid moduleId)
+        //{
+     
+            //return await FindByCondition(a => a.ModuleID == moduleId)
+            //            .ToListAsync();
+       // }
 
     }
 }
