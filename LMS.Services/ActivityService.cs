@@ -22,14 +22,15 @@ namespace LMS.Services
 
         public async Task<ActivityDto?> GetActivityByIdAsync(Guid activityId)
         {
-           return await _mapper.Map<Task<ActivityDto?>>(
-                _uow.Activities.GetActivityByIdAsync(activityId)
-            );
+            var activity = await _uow.Activities.GetActivityByIdAsync(activityId);
+            return _mapper.Map<ActivityDto?>(activity);
         }
 
+        // GetActivitiesByModuleIdAsync does not work until ModuleId uncommented in Activity
         public async Task<IEnumerable<ActivityDto>> GetActivitiesByModuleIdAsync(Guid moduleId)
         {
-            return await _mapper.Map<Task<IEnumerable<ActivityDto>>>(_uow.Activities.GetActivitiesByModuleIdAsync(moduleId));
+            var activities = _uow.Activities.GetActivitiesByModuleIdAsync(moduleId);
+            return await _mapper.Map<Task<IEnumerable<ActivityDto>>>(activities);
         }
     }
 }
