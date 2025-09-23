@@ -34,15 +34,6 @@ public class DataSeedHostingService : IHostedService
         if (!env.IsDevelopment()) return;
 
         var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        if (!await context.Courses.AnyAsync())
-        {
-            await AddCourseToDB(context);
-        }
-        if (!await context.Modules.AnyAsync())
-        {
-            await AddModuleToDB(context);
-        }
         if (await context.Users.AnyAsync(cancellationToken)) return;
 
         userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -56,9 +47,13 @@ public class DataSeedHostingService : IHostedService
             await AddRolesAsync([TeacherRole, StudentRole]);
             await AddDemoUsersAsync();
             await AddUsersAsync(20);
+            var courses = GetCourses(1);
+            context.AddRange(courses);
+            var modules = GetModules(courses, 4);
+            context.AddRange(modules);
             var activityTypes = GetActivityTypes();
             context.AddRange(activityTypes);
-            var activities = GetActivities(activityTypes);
+            var activities = GetActivities(activityTypes, modules, 3);
             context.AddRange(activities);
             await context.SaveChangesAsync();
             logger.LogInformation("Seed complete");
@@ -70,7 +65,33 @@ public class DataSeedHostingService : IHostedService
         }
     }
 
-    private List<Activity> GetActivities(List<ActivityType> activityTypes)
+    private List<Module> GetModules(List<Course> courses, int nrOfModules)
+    {
+        var faker = new Faker<Module>().Rules((faker, module) =>
+        {
+            module.Name = faker.Commerce.ProductName();
+            module.Description = faker.Commerce.ProductDescription();
+            module.StartDate = faker.Date.Past(1);
+            module.EndDate = faker.Date.Future(1);
+            module.Course = faker.PickRandom(courses);
+        });
+
+        return faker.Generate(nrOfModules);
+    }
+
+    private List<Course> GetCourses(int nrOfCourses)
+    {
+        var faker = new Faker<Course>().Rules((faker, course) =>
+        {
+            course.Name = faker.Commerce.Department();
+            course.Description = faker.Commerce.ProductDescription();
+            course.StartDate = faker.Date.Past(1);
+        });
+
+        return faker.Generate(nrOfCourses);
+    }
+
+    private List<Activity> GetActivities(List<ActivityType> activityTypes, List<Module> modules, int nrOfActivities)
     {
         DateTime dateTime = DateTime.UtcNow;
 
@@ -81,10 +102,10 @@ public class DataSeedHostingService : IHostedService
             activity.StartTime = faker.Date.Past(1, dateTime);
             activity.EndTime = faker.Date.Future(1, dateTime);
             activity.ActivityType = activityTypes[faker.Random.Int(0, activityTypes.Count - 1)];
-
+            activity.Module = faker.PickRandom(modules);
         });
 
-        return faker.Generate(3);
+        return faker.Generate(nrOfActivities);
 
     }
 
@@ -99,6 +120,10 @@ public class DataSeedHostingService : IHostedService
             new ActivityType
             {
                  Name = "Assignment"
+            },
+            new ActivityType
+            {
+                 Name = "Test"
             }
         };
 
@@ -162,32 +187,6 @@ public class DataSeedHostingService : IHostedService
         }
     }
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-
-    public async Task AddCourseToDB(ApplicationDbContext context)
-    {
-        var course = new Course
-        {
-            Name = "Test Course",
-            Description = "This is a test course",
-            StartDate = DateTime.UtcNow
-        };
-
-        context.Courses.Add(course);
-        await context.SaveChangesAsync();
-    }
-    public async Task AddModuleToDB(ApplicationDbContext context)
-    {
-        var module = new Module
-        {
-            Name = "Sample Module", 
-            Description = "This is a sample module", 
-            StartDate = DateTime.UtcNow,
-            EndDate = DateTime.UtcNow.AddMonths(1),
-           
-        };
-
-        context.Modules.Add(module);
-        await context.SaveChangesAsync();
-    }
-
 }
+
+
