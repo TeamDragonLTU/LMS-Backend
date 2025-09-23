@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Domain.Contracts.Repositories;
 using Domain.Models.Entities;
 using Domain.Models.Exceptions;
@@ -42,30 +43,20 @@ namespace LMS.Services
                 throw new CourseNotFoundException(id);
 
             _mapper.Map(dto, course);
-
-            try
-            {
-                await _unitOfWork.CompleteAsync();
-            }
-            catch (Exception)
-            {
-                if (!await _unitOfWork.Courses.AnyCourseAsync(id))
-                    throw new SaveFailureException("Could not save the course");
-                else
-                    throw;
-            }
+            var changes = await SaveChangesAsync();
+            if (changes <= 0)
+                throw new SaveFailureException("Could not save the course");
 
         }
 
         public async Task<CourseDto> PostCourseAsync(CreateCourseDto dto)
         {
             var course = _mapper.Map<Course>(dto);
-            
             _unitOfWork.Courses.Create(course);
-            await _unitOfWork.CompleteAsync();
-
+            var changes = await SaveChangesAsync();
+            if (changes <= 0)
+                throw new SaveFailureException("Could not save the course");
             var courseDto = _mapper.Map<CourseDto>(course);
-
             return courseDto;
         }
 
@@ -77,7 +68,19 @@ namespace LMS.Services
                 throw new CourseNotFoundException(id);
 
             _unitOfWork.Courses.Delete(course);
-            await _unitOfWork.CompleteAsync();
+            var changes = await SaveChangesAsync();
+            if (changes <= 0)
+                throw new SaveFailureException("Could not delete the course");
+        }
+
+        // Helper för att få antal ändringar från SaveChangesAsync
+        private async Task<int> SaveChangesAsync()
+        {
+            var contextProp = _unitOfWork.GetType().GetField("_context", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (contextProp?.GetValue(_unitOfWork) is DbContext context)
+                return await context.SaveChangesAsync();
+            await _unitOfWork.CompleteAsync(); // fallback, men returnerar inget
+            return 1; // antag att det lyckades om vi inte kan få context
         }
 
     }
