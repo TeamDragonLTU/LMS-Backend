@@ -20,7 +20,7 @@ namespace LMS.Infractructure.Repositories
 
         public async Task<IEnumerable<Module>> GetAllModulesAsync()
         {
-            return await FindAll().ToListAsync();
+            return await FindAll().Include(m => m.Course).ToListAsync();
         }
 
         public async Task AddAsync(Module module)
