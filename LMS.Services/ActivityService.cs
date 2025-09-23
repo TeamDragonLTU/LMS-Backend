@@ -32,5 +32,14 @@ namespace LMS.Services
             var activities = _uow.Activities.GetActivitiesByModuleIdAsync(moduleId);
             return await _mapper.Map<Task<IEnumerable<ActivityDto>>>(activities);
         }
+
+        public async Task DeleteActivityAsync(Guid id)
+        {
+            var activity = await _uow.Activities.GetActivityByIdAsync(id);
+            if (activity == null) throw new Exception();
+
+            _uow.Activities.Delete(activity);
+            await _uow.CompleteAsync();
+        }
     }
 }
