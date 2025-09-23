@@ -23,6 +23,27 @@ public static class ExceptionMiddlewareExtetensions
 
                     switch (contextFeature.Error)
                     {
+
+                        case NotFoundException notFoundException:
+                            statusCode = StatusCodes.Status404NotFound;
+                            problemDetails = problemDetailsFactory.CreateProblemDetails(
+                                context,
+                                statusCode,
+                                title: notFoundException.Title,
+                                detail: notFoundException.Message,
+                                instance: context.Request.Path);
+                            break;
+
+                        case SaveFailureException saveFailureException:
+                            statusCode = saveFailureException.StatusCode;
+                            problemDetails = problemDetailsFactory.CreateProblemDetails(
+                                context,
+                                statusCode,
+                                title: saveFailureException.Title,
+                                detail: saveFailureException.Message,
+                                instance: context.Request.Path);
+                            break;
+
                         case TokenValidationException tokenValidationException:
                             statusCode = tokenValidationException.StatusCode;
                             problemDetails = problemDetailsFactory.CreateProblemDetails(

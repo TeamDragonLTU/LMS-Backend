@@ -2,7 +2,7 @@
 
 namespace LMS.Shared.DTOs.CourseDtos
 {
-    public class CreateCourseDto
+    public class UpdateCourseDto
     {
         [Required]
         public string Name { get; set; } = null!;
