@@ -21,8 +21,8 @@ namespace LMS.Shared.DTOs.Module
         [Required]
         public DateTime EndDate { get; set; }
 
-        [Required]
-        public Guid CourseId { get; set; }
+    [Required]
+    public Guid CourseId { get; set; }
 
     }
 }

@@ -49,7 +49,7 @@ namespace Companies.Infractructure.Migrations
 
                     b.HasIndex("ActivityTypeID");
 
-                    b.ToTable("Activities", (string)null);
+                    b.ToTable("Activities");
                 });
 
             modelBuilder.Entity("Domain.Models.Entities.ActivityType", b =>
@@ -64,7 +64,7 @@ namespace Companies.Infractructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ActivityTypes", (string)null);
+                    b.ToTable("ActivityTypes");
                 });
 
             modelBuilder.Entity("Domain.Models.Entities.ApplicationUser", b =>
@@ -162,7 +162,7 @@ namespace Companies.Infractructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("Domain.Models.Entities.Module", b =>
@@ -171,7 +171,7 @@ namespace Companies.Infractructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CourseId")
+                    b.Property<Guid>("CourseId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -194,7 +194,7 @@ namespace Companies.Infractructure.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("Modules", (string)null);
+                    b.ToTable("Modules");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -353,9 +353,13 @@ namespace Companies.Infractructure.Migrations
 
             modelBuilder.Entity("Domain.Models.Entities.Module", b =>
                 {
-                    b.HasOne("Domain.Models.Entities.Course", null)
+                    b.HasOne("Domain.Models.Entities.Course", "Course")
                         .WithMany("Modules")
-                        .HasForeignKey("CourseId");
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

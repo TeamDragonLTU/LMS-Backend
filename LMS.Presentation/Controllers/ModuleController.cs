@@ -37,8 +37,15 @@ namespace LMS.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateModule([FromBody] CreateModuleDto dto)
         {
-            var result = await _serviceManager.ModuleService.CreateModuleAsync(dto);
-            return CreatedAtAction(nameof(GetAllModules), new { id = result.Id }, result);
+            try
+            {
+                var result = await _serviceManager.ModuleService.CreateModuleAsync(dto);
+                return CreatedAtAction(nameof(GetAllModules), new { id = result.Id }, result);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
