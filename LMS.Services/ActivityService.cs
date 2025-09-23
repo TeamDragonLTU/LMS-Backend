@@ -2,11 +2,6 @@
 using Domain.Contracts.Repositories;
 using LMS.Shared.DTOs.ActivityDtos;
 using Service.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.Services
 {
@@ -15,7 +10,8 @@ namespace LMS.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public ActivityService(IUnitOfWork uow, IMapper mapper) { 
+        public ActivityService(IUnitOfWork uow, IMapper mapper)
+        {
             _uow = uow;
             _mapper = mapper;
         }
@@ -26,7 +22,6 @@ namespace LMS.Services
             return _mapper.Map<ActivityDto?>(activity);
         }
 
-        // GetActivitiesByModuleIdAsync does not work until ModuleId uncommented in Activity
         public async Task<IEnumerable<ActivityDto>> GetActivitiesByModuleIdAsync(Guid moduleId)
         {
             var activities = _uow.Activities.GetActivitiesByModuleIdAsync(moduleId);
