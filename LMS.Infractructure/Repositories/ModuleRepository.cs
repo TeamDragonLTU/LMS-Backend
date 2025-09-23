@@ -7,15 +7,13 @@ namespace LMS.Infractructure.Repositories
 {
     public class ModuleRepository : RepositoryBase<Module>, IModuleRepository
     {
-
         public ModuleRepository(ApplicationDbContext context) : base(context)
         {
-
         }
 
-        public async Task<Module?> GetModuleAsync(Guid moduleId)
+        public async Task<Module?> GetModuleAsync(Guid moduleId, bool trackChanges = false)
         {
-            return await FindAll().FirstOrDefaultAsync(m => m.Id == moduleId);
+            return await FindAll(trackChanges).FirstOrDefaultAsync(m => m.Id == moduleId);
         }
 
         public async Task<IEnumerable<Module>> GetAllModulesAsync()

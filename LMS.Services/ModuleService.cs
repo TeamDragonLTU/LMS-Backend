@@ -28,7 +28,7 @@ namespace LMS.Services
             return _mapper.Map<IEnumerable<ModuleDto>>(modules);
         }
 
-        public async Task<ModuleDto?> GetModuleAsync(Guid moduleId)
+        public async Task<ModuleDto?> GetModuleAsync(Guid moduleId, trackChanges: true )
         {
             var module = await _unitOfWork.Modules.GetModuleAsync(moduleId);
             return module == null ? null : _mapper.Map<ModuleDto>(module);
