@@ -46,7 +46,7 @@ namespace LMS.Services
         {
             var module = await _unitOfWork.Modules.GetModuleAsync(dto.Id);
             if (module == null)
-                throw new ModuleNotFoundException(dto.Id); // Skapa denna exception om den saknas
+                throw new ModuleNotFoundException(dto.Id); 
             _mapper.Map(dto, module);
             await _unitOfWork.CompleteAsync();
             return _mapper.Map<ModuleDto>(module);

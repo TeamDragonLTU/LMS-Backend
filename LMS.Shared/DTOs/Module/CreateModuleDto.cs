@@ -22,7 +22,7 @@ namespace LMS.Shared.DTOs.Module
         public DateTime EndDate { get; set; }
 
         [Required]
-        public int CourseId { get; set; }
+        public Guid CourseId { get; set; }
 
     }
 }
