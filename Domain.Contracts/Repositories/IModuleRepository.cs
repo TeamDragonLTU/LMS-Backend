@@ -11,5 +11,7 @@ namespace Domain.Contracts.Repositories
     {
         Task<Module?> GetModuleAsync(Guid moduleId);
         Task<IEnumerable<Module>> GetAllModulesAsync();
+        Task AddAsync(Module module);
+        void Remove(Module module);
     }
 }

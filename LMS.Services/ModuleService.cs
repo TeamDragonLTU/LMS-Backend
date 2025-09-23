@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Repositories;
+using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.Module;
 using Service.Contracts;
 using System;
@@ -31,6 +32,33 @@ namespace LMS.Services
         {
             var module = await _unitOfWork.Modules.GetModuleAsync(moduleId);
             return module == null ? null : _mapper.Map<ModuleDto>(module);
+        }
+
+        public async Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto)
+        {
+            var module = _mapper.Map<Domain.Models.Entities.Module>(dto);
+            await _unitOfWork.Modules.AddAsync(module);
+            await _unitOfWork.CompleteAsync();
+            return _mapper.Map<ModuleDto>(module);
+        }
+
+        public async Task<ModuleDto> UpdateModuleAsync(UpdateModuleDto dto)
+        {
+            var module = await _unitOfWork.Modules.GetModuleAsync(dto.Id);
+            if (module == null)
+                throw new ModuleNotFoundException(dto.Id); // Skapa denna exception om den saknas
+            _mapper.Map(dto, module);
+            await _unitOfWork.CompleteAsync();
+            return _mapper.Map<ModuleDto>(module);
+        }
+
+        public async Task DeleteModuleAsync(Guid moduleId)
+        {
+            var module = await _unitOfWork.Modules.GetModuleAsync(moduleId);
+            if (module == null)
+                throw new ModuleNotFoundException(moduleId); // Skapa denna exception om den saknas
+            _unitOfWork.Modules.Remove(module);
+            await _unitOfWork.CompleteAsync();
         }
     }
 }

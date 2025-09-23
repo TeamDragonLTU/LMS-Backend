@@ -22,5 +22,16 @@ namespace LMS.Infractructure.Repositories
         {
             return await FindAll().ToListAsync();
         }
+
+        public async Task AddAsync(Module module)
+        {
+            Create(module);
+            await Task.CompletedTask;
+        }
+
+        public void Remove(Module module)
+        {
+            Delete(module);
+        }
     }
 }
