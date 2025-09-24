@@ -12,6 +12,6 @@ namespace Service.Contracts
         Task<IEnumerable<ActivityDto>> GetActivitiesByModuleIdAsync(Guid moduleId);
         Task<ActivityDto?> GetActivityByIdAsync(Guid activityId);
         Task DeleteActivityAsync(Guid id);
-
+        Task<ActivityDto> PostActivityAsync(CreateActivityDto dto);
     }
 }
