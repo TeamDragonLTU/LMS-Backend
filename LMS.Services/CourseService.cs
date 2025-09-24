@@ -21,7 +21,8 @@ namespace LMS.Services
         }
         public async Task<IEnumerable<CourseDto>> GetAllCoursesAsync()
         {
-            return _mapper.Map<IEnumerable<CourseDto>>(await _unitOfWork.Courses.GetCoursesAsync());
+            var courses = await _unitOfWork.Courses.GetCoursesAsync();
+            return _mapper.Map<IEnumerable<CourseDto>>(courses);
         }
 
         public async Task<CourseDto> GetCourseAsync(Guid id)
