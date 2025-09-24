@@ -52,5 +52,20 @@ namespace LMS.Services
             var activityDto = _mapper.Map<ActivityDto>(activity);
             return activityDto;
         }
+
+        public async Task PutActivityAsync(Guid activityId, UpdateActivityDto dto)
+        {
+            var activity = await _uow.Activities.GetActivityByIdAsync(activityId);
+            if (activity == null)
+            {
+                throw new Exception(); //Här ska exeption kastas om aktiviteten inte finns
+            }
+            _mapper.Map(dto, activity);
+
+            //Här ska en exception kastas om uppdateringen misslyckades
+
+            _uow.Activities.Update(activity);
+            await _uow.CompleteAsync();
+        }
     }
 }

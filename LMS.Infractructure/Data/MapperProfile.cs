@@ -24,5 +24,6 @@ public class MapperProfile : Profile
         CreateMap<Activity, ActivityDto>();
         CreateMap<ActivityType, ActivityTypeDto>();
         CreateMap<CreateActivityDto, Activity>();
+        CreateMap<UpdateActivityDto, Activity>();
     }
 }

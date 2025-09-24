@@ -63,5 +63,15 @@ namespace LMS.Presentation.Controllers
             return CreatedAtAction(nameof(GetActivityById), new { activityId = activityDto.Id }, activityDto);
         }
 
+        [HttpPut("{id}")]
+        [SwaggerOperation(Summary = "Update activity", Description = "Updates an activity by ID.")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<IActionResult> PutActivity(Guid id, UpdateActivityDto dto)
+        {
+          await  _serviceManager.ActivityService.PutActivityAsync(id, dto);
+            return NoContent();
+        }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LMS.Shared.DTOs.ActivityDtos
 {
-    internal class UpdateActivityDto
+    public class UpdateActivityDto
     {
 
         public Guid Id { get; set; }
