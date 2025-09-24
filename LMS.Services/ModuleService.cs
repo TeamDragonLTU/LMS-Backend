@@ -29,9 +29,9 @@ namespace LMS.Services
             return _mapper.Map<IEnumerable<ModuleDto>>(modules);
         }
 
-        public async Task<ModuleDto?> GetModuleAsync(Guid moduleId, bool trackChanges = false)
+        public async Task<ModuleDto?> GetModuleAsync(Guid moduleId)
         {
-            var module = await _unitOfWork.Modules.GetModuleAsync(moduleId, trackChanges);
+            var module = await _unitOfWork.Modules.GetModuleAsync(moduleId);
             return module == null ? null : _mapper.Map<ModuleDto>(module);
         }
 
@@ -72,14 +72,14 @@ namespace LMS.Services
                 throw new SaveFailureException("Could not delete the module");
         }
 
-        // Helper för att få antal ändringar från SaveChangesAsync
+ 
         private async Task<int> SaveChangesAsync()
         {
             var contextProp = _unitOfWork.GetType().GetField("_context", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (contextProp?.GetValue(_unitOfWork) is DbContext context)
                 return await context.SaveChangesAsync();
-            await _unitOfWork.CompleteAsync(); // fallback, men returnerar inget
-            return 1; // antag att det lyckades om vi inte kan få context
+            await _unitOfWork.CompleteAsync(); 
+            return 1; 
         }
     }
 }

@@ -38,7 +38,7 @@ namespace LMS.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetModule(Guid id)
         {
-            var module = await _serviceManager.ModuleService.GetModuleAsync(id, false);
+            var module = await _serviceManager.ModuleService.GetModuleAsync(id);
             if (module == null)
                 return NotFound();
             return Ok(module);
