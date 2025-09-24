@@ -49,9 +49,9 @@ namespace LMS.Services
             return _mapper.Map<ModuleDto>(module);
         }
 
-        public async Task<ModuleDto> UpdateModuleAsync(UpdateModuleDto dto)
+        public async Task<ModuleDto> UpdateModuleAsync(Guid id, UpdateModuleDto dto)
         {
-            var module = await _unitOfWork.Modules.GetModuleAsync(dto.Id);
+            var module = await _unitOfWork.Modules.GetModuleAsync(id, trackChanges: true);
             if (module == null)
                 throw new ModuleNotFoundException(dto.Id); 
             _mapper.Map(dto, module);

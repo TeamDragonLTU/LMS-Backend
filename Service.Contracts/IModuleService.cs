@@ -13,7 +13,7 @@ namespace Service.Contracts
     Task<ModuleDto?> GetModuleAsync(Guid moduleId, bool trackChanges = false);
         Task<IEnumerable<ModuleDto>> GetAllModulesAsync();
         Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto);
-        Task<ModuleDto> UpdateModuleAsync(UpdateModuleDto dto);
+        Task<ModuleDto> UpdateModuleAsync(Guid id, UpdateModuleDto dto);
         Task DeleteModuleAsync(Guid moduleId);
     }
 }

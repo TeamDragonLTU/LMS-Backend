@@ -70,7 +70,7 @@ namespace LMS.Presentation.Controllers
         {
             if (id != dto.Id)
                 return BadRequest("Id mismatch");
-            var result = await _serviceManager.ModuleService.UpdateModuleAsync(dto);
+            var result = await _serviceManager.ModuleService.UpdateModuleAsync(id, dto);
             return Ok(result);
         }
 
