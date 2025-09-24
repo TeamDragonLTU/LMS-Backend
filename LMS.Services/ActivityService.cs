@@ -35,6 +35,15 @@ namespace LMS.Services
             return await _mapper.Map<Task<IEnumerable<ActivityDto>>>(activities);
         }
 
+        public async Task DeleteActivityAsync(Guid id)
+        {
+            var activity = await _uow.Activities.GetActivityByIdAsync(id);
+            if (activity == null) throw new Exception();
+
+            _uow.Activities.Delete(activity);
+            await _uow.CompleteAsync();
+        }
+
         //anropas från controllern
         //Får en createActivityDto därifrån
         // GÖr om den till en Activity entitet
