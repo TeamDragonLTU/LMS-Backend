@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Repositories;
+using Domain.Models.Entities;
 using LMS.Shared.DTOs.ActivityDtos;
 using Service.Contracts;
 using System;
@@ -15,7 +16,8 @@ namespace LMS.Services
         private readonly IUnitOfWork _uow;
         private readonly IMapper _mapper;
 
-        public ActivityService(IUnitOfWork uow, IMapper mapper) { 
+        public ActivityService(IUnitOfWork uow, IMapper mapper)
+        {
             _uow = uow;
             _mapper = mapper;
         }
@@ -40,6 +42,15 @@ namespace LMS.Services
 
             _uow.Activities.Delete(activity);
             await _uow.CompleteAsync();
+        }
+
+        public async Task<ActivityDto> PostActivityAsync(CreateActivityDto dto)
+        {
+            var activity = _mapper.Map<Activity>(dto);
+            _uow.Activities.Create(activity);
+            await _uow.CompleteAsync();
+            var activityDto = _mapper.Map<ActivityDto>(activity);
+            return activityDto;
         }
     }
 }
