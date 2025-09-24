@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using LMS.Shared.DTOs.ActivityDtos;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
@@ -49,6 +50,17 @@ namespace LMS.Presentation.Controllers
         {
             await _serviceManager.ActivityService.DeleteActivityAsync(id);
             return NoContent();
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Summary = "Post activity", Description = "Posts an activity")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ActivityDto))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        public async Task<ActionResult<ActivityDto>> PostActivity(CreateActivityDto dto)
+        {
+            var activityDto = await _serviceManager.ActivityService.PostActivityAsync(dto);
+            return CreatedAtAction(nameof(GetActivityById), new { activityId = activityDto.Id }, activityDto);
         }
 
     }

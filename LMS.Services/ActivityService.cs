@@ -44,10 +44,6 @@ namespace LMS.Services
             await _uow.CompleteAsync();
         }
 
-        //anropas från controllern
-        //Får en createActivityDto därifrån
-        // GÖr om den till en Activity entitet
-        //Säger till repository, via uow, att spara den
         public async Task<ActivityDto> PostActivityAsync(CreateActivityDto dto)
         {
             var activity = _mapper.Map<Activity>(dto);
