@@ -61,7 +61,7 @@ namespace LMS.Services
         public async Task<CourseDto> PostCourseAsync(CreateCourseDto dto)
         {
             var course = _mapper.Map<Course>(dto);
-            
+
             _unitOfWork.Courses.Create(course);
             await _unitOfWork.CompleteAsync();
 
