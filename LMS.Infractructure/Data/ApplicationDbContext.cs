@@ -29,12 +29,11 @@ namespace LMS.Infractructure.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new ApplicationUserConfigurations());
-            // Help needed
-            /*builder.Entity<Module>() 
+            builder.Entity<Module>() 
                 .HasOne(m => m.Course)
-                .WithMany(k => k.Module) 
-                .HasForeignKey(m => m.CourseID)
-                .OnDelete(DeleteBehavior.Cascade);*/
+                .WithMany(k => k.Modules) 
+                .HasForeignKey(m => m.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
