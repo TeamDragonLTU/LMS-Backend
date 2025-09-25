@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Repositories;
 using Domain.Models.Entities;
+using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.ActivityDtos;
 using Service.Contracts;
 using System;
@@ -59,11 +60,9 @@ namespace LMS.Services
             var activity = await _uow.Activities.GetActivityByIdAsync(id);
             if (activity == null)
             {
-                throw new ActivityNotFoundException(id); 
+                throw new ActivityNotFoundException(id);
             }
             _mapper.Map(dto, activity);
-
-            //Här ska en exception kastas om uppdateringen misslyckades
 
             _uow.Activities.Update(activity);
             await _uow.CompleteAsync();
