@@ -177,15 +177,16 @@ public class DataSeedHostingService : IHostedService
     }
     public async Task AddModuleToDB(ApplicationDbContext context)
     {
+        var course = context.Courses.FirstOrDefault();
+        if (course == null) throw new Exception("No course found for seeding module.");
         var module = new Module
         {
-            Name = "Sample Module", 
-            Description = "This is a sample module", 
+            Name = "Sample Module",
+            Description = "This is a sample module",
             StartDate = DateTime.UtcNow,
             EndDate = DateTime.UtcNow.AddMonths(1),
-           
+            CourseId = course.Id,
         };
-
         context.Modules.Add(module);
         await context.SaveChangesAsync();
     }
