@@ -25,6 +25,7 @@ namespace LMS.Services
         public async Task<ActivityDto?> GetActivityByIdAsync(Guid activityId)
         {
             var activity = await _uow.Activities.GetActivityByIdAsync(activityId);
+            if (activity == null) throw new ActivityNotFoundException(activityId);
             return _mapper.Map<ActivityDto?>(activity);
         }
 
@@ -38,7 +39,7 @@ namespace LMS.Services
         public async Task DeleteActivityAsync(Guid id)
         {
             var activity = await _uow.Activities.GetActivityByIdAsync(id);
-            if (activity == null) throw new Exception();
+            if (activity == null) throw new ActivityNotFoundException(id);
 
             _uow.Activities.Delete(activity);
             await _uow.CompleteAsync();
