@@ -53,12 +53,12 @@ namespace LMS.Services
             return activityDto;
         }
 
-        public async Task PutActivityAsync(Guid activityId, UpdateActivityDto dto)
+        public async Task PutActivityAsync(Guid id, UpdateActivityDto dto)
         {
-            var activity = await _uow.Activities.GetActivityByIdAsync(activityId);
+            var activity = await _uow.Activities.GetActivityByIdAsync(id);
             if (activity == null)
             {
-                throw new Exception(); //Här ska exeption kastas om aktiviteten inte finns
+                throw new ActivityNotFoundException(id); 
             }
             _mapper.Map(dto, activity);
 
