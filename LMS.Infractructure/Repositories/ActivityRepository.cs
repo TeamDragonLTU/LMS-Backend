@@ -9,10 +9,6 @@ namespace LMS.Infractructure.Repositories
     {
         public ActivityRepository(ApplicationDbContext context) : base(context) { }
 
-        public Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid moduleId)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Activity?> GetActivityByIdAsync(Guid id)
         {
@@ -20,12 +16,12 @@ namespace LMS.Infractructure.Repositories
 
         }
 
-        //public async Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid moduleId)
-        //{
-     
-            //return await FindByCondition(a => a.ModuleID == moduleId)
-            //            .ToListAsync();
-       // }
+        public async Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid ModuleId)
+        {
+
+            return await FindByCondition(a => a.ModuleId == ModuleId)
+                        .ToListAsync();
+        }
 
     }
 }
