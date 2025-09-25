@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Domain.Models.Entities
+﻿namespace Domain.Models.Entities
 {
     public class Course
     {
@@ -9,6 +7,8 @@ namespace Domain.Models.Entities
         public string Description { get; set; } = null!;
         public DateTime StartDate { get; set; }
 
+
+        // Navigation properties
         public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
         public ICollection<Module> Modules { get; set; } = new List<Module>();
 
