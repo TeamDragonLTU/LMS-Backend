@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using Domain.Contracts.Repositories;
 using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.Module;
 using Service.Contracts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace LMS.Services
@@ -29,10 +26,13 @@ namespace LMS.Services
             return _mapper.Map<IEnumerable<ModuleDto>>(modules);
         }
 
-        public async Task<ModuleDto?> GetModuleAsync(Guid moduleId)
+        public async Task<ModuleDto> GetModuleAsync(Guid moduleId)
         {
             var module = await _unitOfWork.Modules.GetModuleAsync(moduleId);
-            return module == null ? null : _mapper.Map<ModuleDto>(module);
+            if (module == null)
+                throw new ModuleNotFoundException(moduleId);
+
+            return _mapper.Map<ModuleDto>(module);
         }
 
         public async Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto)
@@ -43,9 +43,9 @@ namespace LMS.Services
 
             var module = _mapper.Map<Domain.Models.Entities.Module>(dto);
             await _unitOfWork.Modules.AddAsync(module);
-            var changes = await SaveChangesAsync();
-            if (changes <= 0)
-                throw new SaveFailureException("Could not save the module");
+
+            await _unitOfWork.CompleteAsync(); 
+
             return _mapper.Map<ModuleDto>(module);
         }
 
@@ -53,11 +53,12 @@ namespace LMS.Services
         {
             var module = await _unitOfWork.Modules.GetModuleAsync(id, trackChanges: true);
             if (module == null)
-                throw new ModuleNotFoundException(dto.Id); 
+                throw new ModuleNotFoundException(id);
+
             _mapper.Map(dto, module);
-            var changes = await SaveChangesAsync();
-            if (changes <= 0)
-                throw new SaveFailureException("Could not save the module update");
+
+            await _unitOfWork.CompleteAsync(); 
+
             return _mapper.Map<ModuleDto>(module);
         }
 
@@ -66,20 +67,10 @@ namespace LMS.Services
             var module = await _unitOfWork.Modules.GetModuleAsync(moduleId);
             if (module == null)
                 throw new ModuleNotFoundException(moduleId);
-            _unitOfWork.Modules.Remove(module);
-            var changes = await SaveChangesAsync();
-            if (changes <= 0)
-                throw new SaveFailureException("Could not delete the module");
-        }
 
- 
-        private async Task<int> SaveChangesAsync()
-        {
-            var contextProp = _unitOfWork.GetType().GetField("_context", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (contextProp?.GetValue(_unitOfWork) is DbContext context)
-                return await context.SaveChangesAsync();
+            _unitOfWork.Modules.Remove(module);
+
             await _unitOfWork.CompleteAsync(); 
-            return 1; 
         }
     }
 }
