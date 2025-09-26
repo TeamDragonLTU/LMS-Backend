@@ -81,5 +81,13 @@ namespace LMS.Services
             await _unitOfWork.CompleteAsync();
         }
 
+        public async Task<Guid> GetCourseIdFromUserIdAsync(string userId)
+        {
+            var courseId = await _unitOfWork.Courses.GetCourseIdFromUserIdAsync(userId);
+            if (courseId == null)
+                throw new NotFoundException($"No course found for user");
+            return courseId.Value;
+        }
+
     }
 }

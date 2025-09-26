@@ -7,8 +7,11 @@ namespace LMS.Infractructure.Repositories
 {
     public class CourseRepository : RepositoryBase<Course>, ICourseRepository
     {
+        private readonly ApplicationDbContext _context;
+
         public CourseRepository(ApplicationDbContext context) : base(context)
         {
+            _context = context;
         }
 
         public async Task<IEnumerable<Course>> GetCoursesAsync()
@@ -29,6 +32,14 @@ namespace LMS.Infractructure.Repositories
         public async Task<int> CourseCountAsync()
         {
             return await FindAll().CountAsync();
+        }
+
+        public async Task<Guid?> GetCourseIdFromUserIdAsync(string userId)
+        {
+            return await _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.CourseId)
+                .FirstOrDefaultAsync();
         }
     }
 }
