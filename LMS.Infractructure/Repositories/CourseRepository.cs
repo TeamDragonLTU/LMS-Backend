@@ -34,11 +34,15 @@ namespace LMS.Infractructure.Repositories
             return await FindAll().CountAsync();
         }
 
-        public async Task<Guid?> GetCourseIdFromUserIdAsync(string userId)
+        public async Task<Course?> GetCourseWithModulesAndActivitiesAsync(string userId)
         {
             return await _context.Users
                 .Where(u => u.Id == userId)
-                .Select(u => u.CourseId)
+                .Include(u => u.Course)
+                    .ThenInclude(c => c.Modules)
+                        .ThenInclude(m => m.Activities)
+                            .ThenInclude(a => a.ActivityType)
+                .Select(u => u.Course)
                 .FirstOrDefaultAsync();
         }
     }

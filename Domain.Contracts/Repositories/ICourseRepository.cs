@@ -8,7 +8,7 @@ namespace Domain.Contracts.Repositories
         Task<Course?> GetCourseAsync(Guid id, bool trackChanges = false);
         Task<bool> AnyCourseAsync(Guid id);
         Task<int> CourseCountAsync();
-        Task<Guid?> GetCourseIdFromUserIdAsync(string userId);
+        Task<Course?> GetCourseWithModulesAndActivitiesAsync(string userId);
 
     }
 }

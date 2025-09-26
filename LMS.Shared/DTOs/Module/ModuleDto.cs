@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LMS.Shared.DTOs.ActivityDtos;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace LMS.Shared.DTOs.Module
         [Required]
         public DateTime EndDate { get; set; }
 
-        //public List<ActivityDto> Activities { get; set; } = new();
+        public List<ActivityDto> Activities { get; set; } = new();
         //public List<DocumentDto> Documents { get; set; } = new();
     }
 }

@@ -16,6 +16,7 @@ public class MapperProfile : Profile
         CreateMap<UserRegistrationDto, ApplicationUser>();
 
         CreateMap<Course, CourseDto>();
+        CreateMap<Course, CourseDetailsDto>();
         CreateMap<Course, CreateCourseDto>().ReverseMap();
         CreateMap<Course, UpdateCourseDto>().ReverseMap();
 
