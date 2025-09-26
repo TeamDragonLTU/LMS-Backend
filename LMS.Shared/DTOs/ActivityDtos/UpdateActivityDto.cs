@@ -15,13 +15,7 @@ namespace LMS.Shared.DTOs.ActivityDtos
         public DateTime EndTime { get; set; }
         public string Description { get; set; } = null!;
 
-        // public Guid ModuleID { get; set; } // Foreign key
-        public Guid ActivityTypeID { get; set; } // Foreign key
-
-        // Navigation property
-        // public Module Module { get; set; } = null!;
-       // public ActivityType ActivityType { get; set; } = null!;
-
-
+        public Guid ModuleID { get; set; } 
+        public Guid ActivityTypeID { get; set; } 
     }
 }
