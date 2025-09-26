@@ -14,6 +14,7 @@ namespace LMS.Shared.DTOs.ActivityDtos
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string Description { get; set; } = null!;
-        public Guid ActivityTypeId { get; set; } 
+        public Guid ActivityTypeId { get; set; }
+        public Guid ModuleId { get; set; }
     }
 }
