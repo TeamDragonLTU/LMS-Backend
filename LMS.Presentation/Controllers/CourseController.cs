@@ -1,8 +1,10 @@
 ﻿using LMS.Shared.DTOs.CourseDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Security.Claims;
 
 namespace LMS.API
 {
@@ -24,6 +26,22 @@ namespace LMS.API
         public async Task<IActionResult> GetAllCourses()
         {
             return Ok(await _serviceManager.CourseService.GetAllCoursesAsync());
+        }
+
+        [HttpGet("my")]
+        [Authorize]
+        [SwaggerOperation(Summary = "Get coursedetails for user", Description = "Returns the users coursedetails")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<CourseDetailsDto>> GetMyCourseWithModulesAndActivities()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "User ID not found in token." });
+
+            var course = await _serviceManager.CourseService.GetCourseWithModulesAndActivitiesAsync(userId);
+            return Ok(course);
         }
 
         [HttpGet("{id}")]
