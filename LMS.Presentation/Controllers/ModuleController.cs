@@ -2,6 +2,7 @@
 using LMS.Shared.DTOs.Module;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Service.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -25,6 +26,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [SwaggerOperation(Summary = "Get all module", Description = "Gets all module")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllModules()
@@ -33,6 +35,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         [SwaggerOperation(Summary = "Get module by ID", Description = "Gets a module by its ID")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -45,6 +48,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         [SwaggerOperation(Summary = "Create module", Description = "Creates a new module.", Tags = ["Module"])]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CourseDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -62,6 +66,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Teacher")]
         [SwaggerOperation(Summary = "Update module", Description = "Updates an existing module by ID.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -75,13 +80,21 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Teacher")]
         [SwaggerOperation(Summary = "Delete module", Description = "Deletes a module by ID.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteModule(Guid id)
         {
-            await _serviceManager.ModuleService.DeleteModuleAsync(id);
-            return NoContent();
+            try
+            {
+                await _serviceManager.ModuleService.DeleteModuleAsync(id);
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { error = ex.Message });
+            }
         }
     }
 }

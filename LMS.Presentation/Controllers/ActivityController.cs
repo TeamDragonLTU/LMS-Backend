@@ -1,6 +1,7 @@
 ﻿using LMS.Shared.DTOs.ActivityDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Service.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
@@ -25,6 +26,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpGet("{moduleId}/activities")]
+        [Authorize]
         public async Task<IActionResult> GetActivitiesByModuleId(Guid moduleId)
         {
             var activities = await _serviceManager.ActivityService.GetActivitiesByModuleIdAsync(moduleId);
@@ -32,6 +34,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpGet("{activityId}")]
+        [Authorize]
         public async Task<IActionResult> GetActivityById(Guid activityId)
         {
             var activity = await _serviceManager.ActivityService.GetActivityByIdAsync(activityId);
@@ -43,6 +46,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Teacher")]
         [SwaggerOperation(Summary = "Delete activity", Description = "Deletes an activity by ID.")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -53,6 +57,7 @@ namespace LMS.Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Teacher")]
         [SwaggerOperation(Summary = "Post activity", Description = "Posts an activity")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ActivityDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
