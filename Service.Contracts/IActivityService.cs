@@ -13,5 +13,6 @@ namespace Service.Contracts
         Task<ActivityDto?> GetActivityByIdAsync(Guid activityId);
         Task DeleteActivityAsync(Guid id);
         Task<ActivityDto> PostActivityAsync(CreateActivityDto dto);
+        Task PutActivityAsync(Guid activityId, UpdateActivityDto dto);
     }
 }
