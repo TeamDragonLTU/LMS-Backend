@@ -13,13 +13,10 @@ public class CourseConfigurations : IEntityTypeConfiguration<Course>
         builder.HasKey(c => c.Id);
 
         builder.Property(c => c.Name)
-            .IsRequired();
+            .HasMaxLength(50);
 
         builder.Property(c => c.Description)
-            .IsRequired();
-
-        builder.Property(c => c.StartDate)
-            .IsRequired();
+            .HasMaxLength(500);
 
         builder.HasMany(c => c.Users)
             .WithOne(u => u.Course)

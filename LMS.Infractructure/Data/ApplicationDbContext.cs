@@ -1,9 +1,9 @@
 ﻿using Domain.Models.Entities;
 using LMS.Infractructure.Data.Configurations;
+using LMS.Infrastructure.Data.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace LMS.Infractructure.Data
 {
@@ -22,18 +22,17 @@ namespace LMS.Infractructure.Data
             : base(options)
         {
         }
-      
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration(new ApplicationUserConfigurations());
-            builder.Entity<Module>() 
-                .HasOne(m => m.Course)
-                .WithMany(k => k.Modules) 
-                .HasForeignKey(m => m.CourseId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.ApplyConfiguration(new CourseConfigurations());
+            builder.ApplyConfiguration(new ModuleConfigurations());
+            builder.ApplyConfiguration(new ActivityConfigurations());
+            builder.ApplyConfiguration(new ActivityTypeConfigurations());
         }
     }
 }
