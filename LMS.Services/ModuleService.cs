@@ -68,8 +68,12 @@ namespace LMS.Services
             if (module == null)
                 throw new ModuleNotFoundException(moduleId);
 
-            _unitOfWork.Modules.Remove(module);
+            // Kontrollera om det finns aktiviteter kopplade till modulen
+            var activities = await _unitOfWork.Activities.GetActivitiesByModuleIdAsync(moduleId);
+            if (activities.Any())
+                throw new InvalidOperationException("Det finns aktiviteter kopplade till modulen. Ta bort eller flytta dessa aktiviteter innan du kan ta bort modulen.");
 
+            _unitOfWork.Modules.Remove(module);
             await _unitOfWork.CompleteAsync(); 
         }
     }
