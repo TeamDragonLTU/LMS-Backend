@@ -2,9 +2,10 @@
 {
     public record ApplicationUserDto(
         string Email,
-        string UserName
+        string UserName,
+        string Role
     )
     {
-        public ApplicationUserDto() : this(string.Empty, string.Empty) { }
+        public ApplicationUserDto() : this(string.Empty, string.Empty, string.Empty) { }
     }
 }

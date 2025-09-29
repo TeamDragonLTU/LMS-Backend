@@ -36,17 +36,18 @@ namespace LMS.Infractructure.Repositories
 
         public async Task<Course?> GetCourseWithModulesAndActivitiesAsync(string userId)
         {
-            return await _context.Users
+            var user = await _context.Users
                 .Where(u => u.Id == userId)
                 .Include(u => u.Course)
                     .ThenInclude(c => c.Modules)
                         .ThenInclude(m => m.Activities)
                             .ThenInclude(a => a.ActivityType)
-                .Select(u => u.Course)
                 .FirstOrDefaultAsync();
+
+            return user?.Course;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetCourseParticipantsByUserIdAsync(string userId)
+        public async Task<IEnumerable<(ApplicationUser User, string Role)>> GetCourseParticipantsByUserIdAsync(string userId)
         {
             var courseId = await _context.Users
                 .Where(u => u.Id == userId)
@@ -54,11 +55,24 @@ namespace LMS.Infractructure.Repositories
                 .FirstOrDefaultAsync();
 
             if (courseId == null)
-                return Enumerable.Empty<ApplicationUser>();
+                return Enumerable.Empty<(ApplicationUser, string)>();
 
-            return await _context.Users
+            var users = await _context.Users
                 .Where(u => u.CourseId == courseId)
                 .ToListAsync();
+
+            var userIds = users.Select(u => u.Id).ToList();
+            var userRoles = await _context.UserRoles
+                .Where(ur => userIds.Contains(ur.UserId))
+                .ToListAsync();
+            var roles = await _context.Roles.ToListAsync();
+
+            var result = users.Select(u => {
+                var roleId = userRoles.FirstOrDefault(ur => ur.UserId == u.Id)?.RoleId;
+                var roleName = roles.FirstOrDefault(r => r.Id == roleId)?.Name ?? string.Empty;
+                return (u, roleName);
+            });
+            return result;
         }
     }
 }

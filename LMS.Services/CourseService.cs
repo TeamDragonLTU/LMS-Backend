@@ -93,9 +93,13 @@ namespace LMS.Services
 
         public async Task<IEnumerable<ApplicationUserDto>> GetCourseParticipantsByUserIdAsync(string userId)
         {
-            var participants = await _unitOfWork.Courses.GetCourseParticipantsByUserIdAsync(userId);
-
-            return _mapper.Map<IEnumerable<ApplicationUserDto>>(participants);
+            var participantsWithRoles = await _unitOfWork.Courses.GetCourseParticipantsByUserIdAsync(userId);
+            var dtos = participantsWithRoles.Select(tuple => new ApplicationUserDto(
+                tuple.User.Email ?? string.Empty,
+                tuple.User.UserName ?? string.Empty,
+                tuple.Role ?? string.Empty
+            ));
+            return dtos;
         }
     }
 }

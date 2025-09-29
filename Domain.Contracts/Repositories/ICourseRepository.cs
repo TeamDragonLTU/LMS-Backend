@@ -9,7 +9,7 @@ namespace Domain.Contracts.Repositories
         Task<bool> AnyCourseAsync(Guid id);
         Task<int> CourseCountAsync();
         Task<Course?> GetCourseWithModulesAndActivitiesAsync(string userId);
-        Task<IEnumerable<ApplicationUser>> GetCourseParticipantsByUserIdAsync(string userId);
+    Task<IEnumerable<(ApplicationUser User, string Role)>> GetCourseParticipantsByUserIdAsync(string userId);
 
     }
 }
