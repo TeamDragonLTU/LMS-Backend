@@ -2,6 +2,7 @@
 using Domain.Models.Entities;
 using LMS.Shared.DTOs.ActivityDtos;
 using LMS.Shared.DTOs.ActivityTypeDto;
+using LMS.Shared.DTOs.ApplicationUserDtos;
 using LMS.Shared.DTOs.AuthDtos;
 using LMS.Shared.DTOs.CourseDtos;
 using LMS.Shared.DTOs.Module;
@@ -31,5 +32,7 @@ public class MapperProfile : Profile
         CreateMap<ActivityType, ActivityTypeDto>();
         CreateMap<CreateActivityDto, Activity>();
         CreateMap<UpdateActivityDto, Activity>();
+
+        CreateMap<ApplicationUser, ApplicationUserDto>();
     }
 }
