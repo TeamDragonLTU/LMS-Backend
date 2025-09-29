@@ -9,18 +9,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Companies.Infractructure.Migrations
+namespace LMS.Infractructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250925134400_AddToFluentApi")]
-    partial class AddToFluentApi
+    [Migration("20250929075934_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -36,7 +36,8 @@ namespace Companies.Infractructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -46,18 +47,21 @@ namespace Companies.Infractructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActivityTypeId");
+                    b.HasIndex("ActivityTypeId")
+                        .HasDatabaseName("IX_Activity_ActivityTypeId");
 
-                    b.HasIndex("ModuleId");
+                    b.HasIndex("ModuleId")
+                        .HasDatabaseName("IX_Activity_ModuleId");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Activity", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Entities.ActivityType", b =>
@@ -68,11 +72,12 @@ namespace Companies.Infractructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ActivityTypes");
+                    b.ToTable("ActivityType", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Entities.ApplicationUser", b =>
@@ -159,18 +164,20 @@ namespace Companies.Infractructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Course", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Models.Entities.Module", b =>
@@ -184,23 +191,26 @@ namespace Companies.Infractructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CourseId");
+                    b.HasIndex("CourseId")
+                        .HasDatabaseName("IX_Module_CourseId");
 
-                    b.ToTable("Modules");
+                    b.ToTable("Module", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -341,13 +351,13 @@ namespace Companies.Infractructure.Migrations
                     b.HasOne("Domain.Models.Entities.ActivityType", "ActivityType")
                         .WithMany("Activities")
                         .HasForeignKey("ActivityTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Entities.Module", "Module")
                         .WithMany("Activities")
                         .HasForeignKey("ModuleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ActivityType");
@@ -370,7 +380,7 @@ namespace Companies.Infractructure.Migrations
                     b.HasOne("Domain.Models.Entities.Course", "Course")
                         .WithMany("Modules")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Course");
