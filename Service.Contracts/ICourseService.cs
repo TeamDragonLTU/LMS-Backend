@@ -1,4 +1,5 @@
-﻿using LMS.Shared.DTOs.CourseDtos;
+﻿using LMS.Shared.DTOs.ApplicationUserDtos;
+using LMS.Shared.DTOs.CourseDtos;
 
 namespace Service.Contracts
 {
@@ -10,5 +11,6 @@ namespace Service.Contracts
         Task<CourseDto> PostCourseAsync(CreateCourseDto dto);
         Task DeleteCourseAsync(Guid id);
         Task<CourseDetailsDto> GetCourseWithModulesAndActivitiesAsync(string userId);
+        Task<IEnumerable<ApplicationUserDto>> GetCourseParticipantsByUserIdAsync(string userId);
     }
 }
