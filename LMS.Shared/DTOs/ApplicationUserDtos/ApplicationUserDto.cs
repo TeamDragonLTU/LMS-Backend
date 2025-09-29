@@ -1,8 +1,10 @@
 ﻿namespace LMS.Shared.DTOs.ApplicationUserDtos
 {
-    public class ApplicationUserDto
+    public record ApplicationUserDto(
+        string Email,
+        string UserName
+    )
     {
-        public string Email { get; set; } = string.Empty;
-        public string UserName { get; set; } = string.Empty;
+        public ApplicationUserDto() : this(string.Empty, string.Empty) { }
     }
 }
