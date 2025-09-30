@@ -13,13 +13,15 @@ namespace LMS.Infractructure.Repositories
         public async Task<Activity?> GetActivityByIdAsync(Guid id)
         {
             return await FindAll().FirstOrDefaultAsync(a => a.Id == id);
-
+                .Include(a => a.ActivityType)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid ModuleId)
         {
 
             return await FindByCondition(a => a.ModuleId == ModuleId)
+                .Include(a => a.ActivityType)
                         .ToListAsync();
         }
 

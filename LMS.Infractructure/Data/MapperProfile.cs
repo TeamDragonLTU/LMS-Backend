@@ -16,18 +16,18 @@ public class MapperProfile : Profile
         CreateMap<UserRegistrationDto, ApplicationUser>();
 
         CreateMap<Course, CourseDto>();
-        CreateMap<Course, CourseDetailsDto>();
         CreateMap<Course, CreateCourseDto>().ReverseMap();
         CreateMap<Course, UpdateCourseDto>().ReverseMap();
 
 
 
-    CreateMap<Module, ModuleDto>();
-    CreateMap<CreateModuleDto, Module>();
-    CreateMap<UpdateModuleDto, Module>();
+        CreateMap<Module, ModuleDto>();
+        CreateMap<CreateModuleDto, Module>();
+        CreateMap<UpdateModuleDto, Module>();
 
 
-        CreateMap<Activity, ActivityDto>();
+        CreateMap<Activity, ActivityDto>()
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.ActivityType.Name));
         CreateMap<ActivityType, ActivityTypeDto>();
         CreateMap<CreateActivityDto, Activity>();
         CreateMap<UpdateActivityDto, Activity>();

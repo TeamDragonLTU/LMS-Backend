@@ -45,7 +45,11 @@ namespace LMS.Services
             var activity = _mapper.Map<Activity>(dto);
             _uow.Activities.Create(activity);
             await _uow.CompleteAsync();
-            var activityDto = _mapper.Map<ActivityDto>(activity);
+
+            var createdActivity = await _uow.Activities.GetActivityByIdAsync(activity.Id); // To get the ActivityType.Name in the mapping
+
+            var activityDto = _mapper.Map<ActivityDto>(createdActivity);
+
             return activityDto;
         }
 
