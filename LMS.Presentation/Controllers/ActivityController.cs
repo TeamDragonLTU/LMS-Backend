@@ -1,14 +1,9 @@
 ﻿using LMS.Shared.DTOs.ActivityDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Service.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.Presentation.Controllers
 {
@@ -75,7 +70,7 @@ namespace LMS.Presentation.Controllers
 
         public async Task<IActionResult> PutActivity(Guid id, UpdateActivityDto dto)
         {
-          await  _serviceManager.ActivityService.PutActivityAsync(id, dto);
+            await _serviceManager.ActivityService.PutActivityAsync(id, dto);
             return NoContent();
         }
     }

@@ -10,19 +10,18 @@ namespace LMS.Infractructure.Repositories
         public ActivityRepository(ApplicationDbContext context) : base(context) { }
 
 
-        public async Task<Activity?> GetActivityByIdAsync(Guid id)
+        public async Task<Activity?> GetActivityByIdAsync(Guid id, bool trackChanges)
         {
-            return await FindAll().FirstOrDefaultAsync(a => a.Id == id);
+            return await FindAll(trackChanges)
                 .Include(a => a.ActivityType)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<IEnumerable<Activity>> GetActivitiesByModuleIdAsync(Guid ModuleId)
         {
-
             return await FindByCondition(a => a.ModuleId == ModuleId)
                 .Include(a => a.ActivityType)
-                        .ToListAsync();
+                .ToListAsync();
         }
 
     }

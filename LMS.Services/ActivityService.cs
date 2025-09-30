@@ -18,17 +18,17 @@ namespace LMS.Services
             _mapper = mapper;
         }
 
-        public async Task<ActivityDto?> GetActivityByIdAsync(Guid activityId)
+        public async Task<ActivityDto?> GetActivityByIdAsync(Guid activityId, bool trackChanges = false)
         {
-            var activity = await _uow.Activities.GetActivityByIdAsync(activityId);
+            var activity = await _uow.Activities.GetActivityByIdAsync(activityId, trackChanges);
             if (activity == null) throw new ActivityNotFoundException(activityId);
             return _mapper.Map<ActivityDto?>(activity);
         }
 
         public async Task<IEnumerable<ActivityDto>> GetActivitiesByModuleIdAsync(Guid moduleId)
         {
-            var activities = _uow.Activities.GetActivitiesByModuleIdAsync(moduleId);
-            return await _mapper.Map<Task<IEnumerable<ActivityDto>>>(activities);
+            var activities = await _uow.Activities.GetActivitiesByModuleIdAsync(moduleId);
+            return _mapper.Map<IEnumerable<ActivityDto>>(activities);
         }
 
         public async Task DeleteActivityAsync(Guid id)
@@ -55,15 +55,26 @@ namespace LMS.Services
 
         public async Task PutActivityAsync(Guid id, UpdateActivityDto dto)
         {
-            var activity = await _uow.Activities.GetActivityByIdAsync(id);
+            var activity = await _uow.Activities.GetActivityByIdAsync(id, trackChanges: true);
+
             if (activity == null)
             {
                 throw new ActivityNotFoundException(id);
             }
+
             _mapper.Map(dto, activity);
 
-            _uow.Activities.Update(activity);
-            await _uow.CompleteAsync();
+            try
+            {
+                await _uow.CompleteAsync();
+            }
+            catch (Exception)
+            {
+                if (!await _uow.Activities.AnyAsync(a => a.Id == id))
+                    throw new SaveFailureException("Could not save the activity");
+                else
+                    throw;
+            }
         }
     }
 }

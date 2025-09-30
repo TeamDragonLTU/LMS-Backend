@@ -4,7 +4,6 @@ using Domain.Models.Entities;
 using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.CourseDtos;
 using Service.Contracts;
-using System.Data;
 
 namespace LMS.Services
 {
@@ -50,12 +49,11 @@ namespace LMS.Services
             }
             catch (Exception)
             {
-                if (!await _unitOfWork.Courses.AnyCourseAsync(id))
+                if (!await _unitOfWork.Courses.AnyAsync(c => c.Id == id))
                     throw new SaveFailureException("Could not save the course");
                 else
                     throw;
             }
-
         }
 
         public async Task<CourseDto> PostCourseAsync(CreateCourseDto dto)
