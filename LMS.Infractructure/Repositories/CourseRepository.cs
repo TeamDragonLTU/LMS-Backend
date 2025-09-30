@@ -40,5 +40,20 @@ namespace LMS.Infractructure.Repositories
                 .Select(u => u.Course)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<IEnumerable<ApplicationUser>> GetCourseParticipantsByUserIdAsync(string userId)
+        {
+            var courseId = await _context.Users
+                .Where(u => u.Id == userId)
+                .Select(u => u.CourseId)
+                .FirstOrDefaultAsync();
+
+            if (courseId == null)
+                return Enumerable.Empty<ApplicationUser>();
+
+            return await _context.Users
+                .Where(u => u.CourseId == courseId)
+                .ToListAsync();
+        }
     }
 }

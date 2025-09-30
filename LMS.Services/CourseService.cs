@@ -2,6 +2,7 @@
 using Domain.Contracts.Repositories;
 using Domain.Models.Entities;
 using Domain.Models.Exceptions;
+using LMS.Shared.DTOs.ApplicationUserDtos;
 using LMS.Shared.DTOs.CourseDtos;
 using Service.Contracts;
 
@@ -88,6 +89,11 @@ namespace LMS.Services
             return _mapper.Map<CourseDto>(course);
         }
 
+        public async Task<IEnumerable<ApplicationUserDto>> GetCourseParticipantsByUserIdAsync(string userId)
+        {
+            var participants = await _unitOfWork.Courses.GetCourseParticipantsByUserIdAsync(userId);
 
+            return _mapper.Map<IEnumerable<ApplicationUserDto>>(participants);
+        }
     }
 }

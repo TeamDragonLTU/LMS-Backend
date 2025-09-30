@@ -1,8 +1,9 @@
-﻿using LMS.Shared.DTOs.CourseDtos;
+﻿using LMS.Shared.DTOs.ApplicationUserDtos;
+using LMS.Shared.DTOs.CourseDtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Service.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
@@ -44,6 +45,24 @@ namespace LMS.API
 
             var course = await _serviceManager.CourseService.GetCourseWithModulesAndActivitiesAsync(userId);
             return Ok(course);
+        }
+
+        [HttpGet("participants/my")]
+        [Authorize]
+        [SwaggerOperation(Summary = "Get course participants", Description = "Returns all participants in the current user's course.")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ApplicationUserDto>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetMyCourseParticipants()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized(new { message = "User ID not found in token." });
+
+            var participants = await _serviceManager.CourseService.GetCourseParticipantsByUserIdAsync(userId);
+
+            return Ok(participants);
+
         }
 
         [HttpGet("{id}")]

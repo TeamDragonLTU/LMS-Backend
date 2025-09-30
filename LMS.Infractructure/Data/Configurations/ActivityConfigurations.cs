@@ -29,5 +29,10 @@ public class ActivityConfigurations : IEntityTypeConfiguration<Activity>
 
         builder.HasIndex(a => a.ActivityTypeId)
             .HasDatabaseName("IX_Activity_ActivityTypeId");
+
+        builder.HasOne(a => a.ActivityType)
+            .WithMany(at => at.Activities)
+            .HasForeignKey(a => a.ActivityTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

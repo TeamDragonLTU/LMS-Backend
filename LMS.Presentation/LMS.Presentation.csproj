@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Service.Contracts\Service.Contracts.csproj" />
+    <ProjectReference Include="..\LMS.Infractructure\LMS.Infractructure.csproj" />
   </ItemGroup>
 
 </Project>

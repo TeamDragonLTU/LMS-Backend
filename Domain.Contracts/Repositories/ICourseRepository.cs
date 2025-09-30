@@ -8,6 +8,7 @@ namespace Domain.Contracts.Repositories
         Task<Course?> GetCourseAsync(Guid id, bool trackChanges = false);
         Task<int> CourseCountAsync();
         Task<Course?> GetCourseWithModulesAndActivitiesAsync(string userId);
+        Task<IEnumerable<ApplicationUser>> GetCourseParticipantsByUserIdAsync(string userId);
 
     }
 }
