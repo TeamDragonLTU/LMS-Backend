@@ -81,13 +81,13 @@ namespace LMS.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<CourseDetailsDto> GetCourseWithModulesAndActivitiesAsync(string userId)
+        public async Task<CourseDto> GetCourseWithModulesAndActivitiesAsync(string userId)
         {
             var course = await _unitOfWork.Courses.GetCourseWithModulesAndActivitiesAsync(userId);
             if (course == null)
                 throw new NotFoundException("No course found for user");
 
-            return _mapper.Map<CourseDetailsDto>(course);
+            return _mapper.Map<CourseDto>(course);
         }
 
 

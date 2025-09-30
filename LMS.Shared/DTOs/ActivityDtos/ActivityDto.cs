@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LMS.Shared.DTOs.ActivityDtos
+﻿namespace LMS.Shared.DTOs.ActivityDtos
 {
-    public class ActivityDto
+    public record ActivityDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public string Type { get; set; } = string.Empty;
+        public Guid Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public DateTime StartTime { get; init; }
+        public DateTime EndTime { get; init; }
+        public string Description { get; init; } = string.Empty;
+        public string Type { get; init; } = string.Empty;
     }
 }

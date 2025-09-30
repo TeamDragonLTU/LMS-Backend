@@ -9,6 +9,6 @@ namespace Service.Contracts
         Task PutCourseAsync(Guid id, UpdateCourseDto dto);
         Task<CourseDto> PostCourseAsync(CreateCourseDto dto);
         Task DeleteCourseAsync(Guid id);
-        Task<CourseDetailsDto> GetCourseWithModulesAndActivitiesAsync(string userId);
+        Task<CourseDto> GetCourseWithModulesAndActivitiesAsync(string userId);
     }
 }
