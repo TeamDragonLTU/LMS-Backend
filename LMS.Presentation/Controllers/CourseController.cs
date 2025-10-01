@@ -1,7 +1,6 @@
 ﻿using LMS.Shared.DTOs.ApplicationUserDtos;
 using LMS.Shared.DTOs.CourseDtos;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
