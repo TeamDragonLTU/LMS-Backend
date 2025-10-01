@@ -36,7 +36,7 @@ namespace LMS.API
         [SwaggerOperation(Summary = "Get coursedetails for user", Description = "Returns the users coursedetails")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<CourseDetailsDto>> GetMyCourseWithModulesAndActivities()
+        public async Task<ActionResult<CourseDto>> GetMyCourseWithModulesAndActivities()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 

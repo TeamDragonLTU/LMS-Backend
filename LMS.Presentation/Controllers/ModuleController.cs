@@ -1,15 +1,10 @@
 ﻿using LMS.Shared.DTOs.CourseDtos;
 using LMS.Shared.DTOs.Module;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Service.Contracts;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LMS.Presentation.Controllers
 {
@@ -56,7 +51,7 @@ namespace LMS.Presentation.Controllers
         {
             try
             {
-                var result = await _serviceManager.ModuleService.CreateModuleAsync(dto);
+                var result = await _serviceManager.ModuleService.PostModuleAsync(dto);
                 return CreatedAtAction(nameof(GetAllModules), new { id = result.Id }, result);
             }
             catch (ArgumentException ex)
@@ -73,10 +68,8 @@ namespace LMS.Presentation.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> UpdateModule(Guid id, [FromBody] UpdateModuleDto dto)
         {
-            if (id != dto.Id)
-                return BadRequest("Id mismatch");
-            var result = await _serviceManager.ModuleService.UpdateModuleAsync(id, dto);
-            return Ok(result);
+            await _serviceManager.ModuleService.PutModuleAsync(id, dto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

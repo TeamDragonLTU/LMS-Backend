@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Entities;
+using LMS.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

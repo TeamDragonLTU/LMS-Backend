@@ -3,9 +3,6 @@ using Domain.Contracts.Repositories;
 using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.Module;
 using Service.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace LMS.Services
 {
@@ -35,7 +32,7 @@ namespace LMS.Services
             return _mapper.Map<ModuleDto>(module);
         }
 
-        public async Task<ModuleDto> CreateModuleAsync(CreateModuleDto dto)
+        public async Task<ModuleDto> PostModuleAsync(CreateModuleDto dto)
         {
             var course = await _unitOfWork.Courses.GetCourseAsync(dto.CourseId);
             if (course == null)
@@ -44,22 +41,31 @@ namespace LMS.Services
             var module = _mapper.Map<Domain.Models.Entities.Module>(dto);
             await _unitOfWork.Modules.AddAsync(module);
 
-            await _unitOfWork.CompleteAsync(); 
+            await _unitOfWork.CompleteAsync();
 
             return _mapper.Map<ModuleDto>(module);
         }
 
-        public async Task<ModuleDto> UpdateModuleAsync(Guid id, UpdateModuleDto dto)
+        public async Task PutModuleAsync(Guid id, UpdateModuleDto dto)
         {
             var module = await _unitOfWork.Modules.GetModuleAsync(id, trackChanges: true);
+
             if (module == null)
                 throw new ModuleNotFoundException(id);
 
             _mapper.Map(dto, module);
 
-            await _unitOfWork.CompleteAsync(); 
-
-            return _mapper.Map<ModuleDto>(module);
+            try
+            {
+                await _unitOfWork.CompleteAsync();
+            }
+            catch (Exception)
+            {
+                if (!await _unitOfWork.Modules.AnyAsync(m => m.Id == id))
+                    throw new SaveFailureException("Could not save the course");
+                else
+                    throw;
+            }
         }
 
         public async Task DeleteModuleAsync(Guid moduleId)
@@ -74,7 +80,7 @@ namespace LMS.Services
                 throw new InvalidOperationException("Det finns aktiviteter kopplade till modulen. Ta bort eller flytta dessa aktiviteter innan du kan ta bort modulen.");
 
             _unitOfWork.Modules.Remove(module);
-            await _unitOfWork.CompleteAsync(); 
+            await _unitOfWork.CompleteAsync();
         }
     }
 }

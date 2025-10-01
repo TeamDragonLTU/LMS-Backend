@@ -5,7 +5,6 @@ using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.ApplicationUserDtos;
 using LMS.Shared.DTOs.CourseDtos;
 using Service.Contracts;
-using System.Data;
 
 namespace LMS.Services
 {
@@ -51,12 +50,11 @@ namespace LMS.Services
             }
             catch (Exception)
             {
-                if (!await _unitOfWork.Courses.AnyCourseAsync(id))
+                if (!await _unitOfWork.Courses.AnyAsync(c => c.Id == id))
                     throw new SaveFailureException("Could not save the course");
                 else
                     throw;
             }
-
         }
 
         public async Task<CourseDto> PostCourseAsync(CreateCourseDto dto)
@@ -82,13 +80,13 @@ namespace LMS.Services
             await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<CourseDetailsDto> GetCourseWithModulesAndActivitiesAsync(string userId)
+        public async Task<CourseDto> GetCourseWithModulesAndActivitiesAsync(string userId)
         {
             var course = await _unitOfWork.Courses.GetCourseWithModulesAndActivitiesAsync(userId);
             if (course == null)
                 throw new NotFoundException("No course found for user");
 
-            return _mapper.Map<CourseDetailsDto>(course);
+            return _mapper.Map<CourseDto>(course);
         }
 
         public async Task<IEnumerable<ApplicationUserDto>> GetCourseParticipantsByUserIdAsync(string userId)

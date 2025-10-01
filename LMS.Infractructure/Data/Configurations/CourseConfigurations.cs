@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Entities;
+using LMS.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,10 +14,10 @@ public class CourseConfigurations : IEntityTypeConfiguration<Course>
         builder.HasKey(c => c.Id);
 
         builder.Property(c => c.Name)
-            .HasMaxLength(50);
+            .HasMaxLength(Constants.NameMaxLength);
 
         builder.Property(c => c.Description)
-            .HasMaxLength(500);
+            .HasMaxLength(Constants.DescriptionMaxLength);
 
         builder.HasMany(c => c.Users)
             .WithOne(u => u.Course)

@@ -1,10 +1,13 @@
-﻿namespace LMS.Shared.DTOs.CourseDtos
+﻿using LMS.Shared.DTOs.Module;
+
+namespace LMS.Shared.DTOs.CourseDtos
 {
-    public class CourseDto
+    public record CourseDto
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string Description { get; set; } = null!;
-        public DateTime StartDate { get; set; }
+        public Guid Id { get; init; }
+        public string Name { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+        public DateTime StartDate { get; init; }
+        public IEnumerable<ModuleDto>? Modules { get; init; }
     }
 }
