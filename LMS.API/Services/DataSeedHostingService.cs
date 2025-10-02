@@ -69,50 +69,214 @@ public class DataSeedHostingService : IHostedService
         }
     }
 
-    private List<Module> GetModules(int nrOfModules)
-    {
-        var faker = new Faker<Module>().Rules((faker, module) =>
-        {
-            module.Name = faker.Commerce.ProductName();
-            module.Description = faker.Commerce.ProductDescription();
-            module.StartDate = faker.Date.Past(1);
-            module.EndDate = faker.Date.Future(1);
-            var nrOfActivities = faker.PickRandom(2, 8);
-            module.Activities = GetActivities(nrOfActivities);
-        });
-
-        return faker.Generate(nrOfModules);
-    }
-
     private List<Course> GetCourses(int nrOfCourses)
     {
         var faker = new Faker<Course>().Rules((faker, course) =>
         {
+            var currentYear = DateTime.UtcNow.Year;
+            var currentMonth = DateTime.UtcNow.Month;
+
+            int startYear;
+            if (currentMonth >= 8)
+            {
+                startYear = currentYear;
+            }
+            else
+            {
+                startYear = currentYear - 1;
+            }
+
+            var earliestStart = new DateTime(startYear, 8, 25);
+            var latestStart = new DateTime(startYear, 9, 25);
+            course.StartDate = faker.Date.Between(earliestStart, latestStart);
+
             course.Name = faker.Commerce.Department();
             course.Description = faker.Commerce.ProductDescription();
-            course.StartDate = faker.Date.Past(1);
-            var nrOfModules = faker.PickRandom(2, 8);
-            course.Modules = GetModules(nrOfModules);
+
+            var nrOfModules = faker.PickRandom(4, 8);
+
+            var minEndDate = new DateTime(startYear + 1, 3, 31);
+            var maxEndDate = new DateTime(startYear + 1, 6, 30);
+
+            var courseEndDate = faker.Date.Between(minEndDate, maxEndDate);
+
+            course.Modules = GetModules(nrOfModules, course.StartDate, courseEndDate);
         });
 
         return faker.Generate(nrOfCourses);
     }
 
-    private List<Activity> GetActivities(int nrOfActivities)
+    private List<Module> GetModules(int nrOfModules, DateTime courseStartDate, DateTime courseEndDate)
     {
-        DateTime dateTime = DateTime.UtcNow;
+        var modules = new List<Module>();
+        var faker = new Faker();
 
-        var faker = new Faker<Activity>().Rules((faker, activity) =>
+        var totalCourseDays = (courseEndDate - courseStartDate).TotalDays;
+        var currentDate = courseStartDate;
+
+        for (int i = 0; i < nrOfModules; i++)
         {
-            activity.Name = faker.Commerce.ProductName();
-            activity.Description = faker.Commerce.ProductDescription();
-            activity.StartTime = faker.Date.Past(1, dateTime);
-            activity.EndTime = faker.Date.Future(1, dateTime);
-            activity.ActivityType = _activityTypes[faker.Random.Int(0, _activityTypes.Count - 1)];
-        });
+            var remainingDays = (courseEndDate - currentDate).TotalDays;
+            var remainingModules = nrOfModules - i;
 
-        return faker.Generate(nrOfActivities);
+            var avgDaysPerRemainingModule = remainingDays / remainingModules;
 
+            var minDuration = 21;
+            var maxDuration = 56;
+
+
+            var constrainedMax = (int)Math.Floor(avgDaysPerRemainingModule * 1.2);
+            maxDuration = Math.Min(maxDuration, constrainedMax);
+
+            if (i == nrOfModules - 1)
+            {
+                maxDuration = (int)Math.Floor(remainingDays);
+                minDuration = Math.Min(minDuration, maxDuration);
+            }
+            else
+            {
+                var daysNeededForOthers = (remainingModules - 1) * minDuration;
+                maxDuration = Math.Min(maxDuration, (int)Math.Floor(remainingDays - daysNeededForOthers));
+            }
+
+            maxDuration = Math.Max(minDuration, maxDuration);
+
+            var moduleDurationDays = faker.Random.Int(minDuration, maxDuration);
+
+            var moduleStartDate = currentDate;
+            var moduleEndDate = moduleStartDate.AddDays(moduleDurationDays);
+
+            if (moduleEndDate > courseEndDate)
+            {
+                moduleEndDate = courseEndDate;
+            }
+
+            var module = new Module
+            {
+                Name = faker.Commerce.ProductName(),
+                Description = faker.Commerce.ProductDescription(),
+                StartDate = moduleStartDate,
+                EndDate = moduleEndDate,
+                Activities = GetActivities(moduleStartDate, moduleEndDate)
+            };
+
+            modules.Add(module);
+
+            currentDate = moduleEndDate.AddDays(1);
+
+            if (currentDate >= courseEndDate)
+            {
+                break;
+            }
+        }
+
+        return modules;
+    }
+
+    private List<Activity> GetActivities(DateTime moduleStartDate, DateTime moduleEndDate)
+    {
+        var activities = new List<Activity>();
+        var faker = new Faker();
+
+        var workingDays = new List<DateTime>();
+        var currentDate = moduleStartDate.Date;
+
+        while (currentDate <= moduleEndDate.Date)
+        {
+            if (currentDate.DayOfWeek != DayOfWeek.Saturday &&
+                currentDate.DayOfWeek != DayOfWeek.Sunday)
+            {
+                workingDays.Add(currentDate);
+            }
+            currentDate = currentDate.AddDays(1);
+        }
+
+        var totalActivitiesToGenerate = workingDays.Count * 2;
+
+        var activitiesPerDay = new Dictionary<DateTime, int>();
+
+        foreach (var day in workingDays)
+        {
+            activitiesPerDay[day] = 1;
+        }
+
+        var remainingActivities = totalActivitiesToGenerate - workingDays.Count;
+        for (int i = 0; i < remainingActivities; i++)
+        {
+            var randomDay = faker.PickRandom(workingDays);
+            activitiesPerDay[randomDay]++;
+        }
+
+        foreach (var day in workingDays)
+        {
+            var activitiesForThisDay = activitiesPerDay[day];
+            var occupiedTimeRanges = new List<(int startHour, int endHour)>();
+
+            for (int i = 0; i < activitiesForThisDay; i++)
+            {
+                var activityDurationHours = faker.Random.Int(1, 4);
+                var possibleStartHours = new List<int>();
+
+                if (activityDurationHours <= 3) possibleStartHours.Add(9);
+                if (activityDurationHours <= 2) possibleStartHours.Add(10);
+                if (activityDurationHours <= 1) possibleStartHours.Add(11);
+
+                if (activityDurationHours <= 4) possibleStartHours.Add(13);
+                if (activityDurationHours <= 3) possibleStartHours.Add(14);
+                if (activityDurationHours <= 2) possibleStartHours.Add(15);
+                if (activityDurationHours <= 1) possibleStartHours.Add(16);
+
+                var validStartHours = new List<int>();
+                foreach (var startHour in possibleStartHours)
+                {
+                    var endHour = startHour + activityDurationHours;
+                    bool hasOverlap = false;
+
+                    foreach (var (occupiedStart, occupiedEnd) in occupiedTimeRanges)
+                    {
+                        if (startHour < occupiedEnd && endHour > occupiedStart)
+                        {
+                            hasOverlap = true;
+                            break;
+                        }
+                    }
+
+                    if (!hasOverlap)
+                    {
+                        validStartHours.Add(startHour);
+                    }
+                }
+
+                if (validStartHours.Count == 0)
+                {
+                    continue;
+                }
+
+                var randomStartHour = faker.PickRandom(validStartHours);
+                var activityStartTime = day.AddHours(randomStartHour);
+                var activityEndTime = activityStartTime.AddHours(activityDurationHours);
+
+                if (activityEndTime > moduleEndDate)
+                {
+                    break;
+                }
+
+                occupiedTimeRanges.Add((randomStartHour, randomStartHour + activityDurationHours));
+
+                var activity = new Activity
+                {
+                    Name = faker.Commerce.ProductName(),
+                    Description = faker.Commerce.ProductDescription(),
+                    StartTime = activityStartTime,
+                    EndTime = activityEndTime,
+                    ActivityType = _activityTypes[faker.Random.Int(0, _activityTypes.Count - 1)]
+                };
+
+                activities.Add(activity);
+            }
+        }
+
+        return activities.OrderBy(a => a.StartTime).ToList();
     }
 
     private List<ActivityType> GetActivityTypes()
