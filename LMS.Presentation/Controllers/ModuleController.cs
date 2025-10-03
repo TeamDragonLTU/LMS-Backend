@@ -35,7 +35,7 @@ namespace LMS.Presentation.Controllers
         [Authorize]
         [SwaggerOperation(Summary = "Get modules by course ID", Description = "Gets modules for a course")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetModulesBCourseId(Guid courseId)
+        public async Task<IActionResult> GetModulesByCourseId(Guid courseId)
         {
             var modules = await _serviceManager.ModuleService.GetModulesByCourseIdAsync(courseId);
             return Ok(modules);
