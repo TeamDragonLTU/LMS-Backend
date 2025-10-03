@@ -20,14 +20,27 @@ namespace LMS.Presentation.Controllers
             _serviceManager = serviceManager;
         }
 
+
         [HttpGet]
         [Authorize]
-        [SwaggerOperation(Summary = "Get all module", Description = "Gets all module")]
+        [SwaggerOperation(Summary = "Get all modules", Description = "Gets all modules")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllModules()
         {
             return Ok(await _serviceManager.ModuleService.GetAllModulesAsync());
         }
+
+
+        [HttpGet("{courseId}/modules")]
+        [Authorize]
+        [SwaggerOperation(Summary = "Get modules by course ID", Description = "Gets modules for a course")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetModulesBCourseId(Guid courseId)
+        {
+            var modules = await _serviceManager.ModuleService.GetModulesByCourseIdAsync(courseId);
+            return Ok(modules);
+        }
+
 
         [HttpGet("{id}")]
         [Authorize]
@@ -41,6 +54,7 @@ namespace LMS.Presentation.Controllers
                 return NotFound();
             return Ok(module);
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Teacher")]
@@ -60,6 +74,7 @@ namespace LMS.Presentation.Controllers
             }
         }
 
+
         [HttpPut("{id}")]
         [Authorize(Roles = "Teacher")]
         [SwaggerOperation(Summary = "Update module", Description = "Updates an existing module by ID.")]
@@ -71,6 +86,7 @@ namespace LMS.Presentation.Controllers
             await _serviceManager.ModuleService.PutModuleAsync(id, dto);
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Teacher")]

@@ -11,21 +11,31 @@ namespace LMS.Infractructure.Repositories
         {
         }
 
+
         public async Task<Module?> GetModuleAsync(Guid moduleId, bool trackChanges = false)
         {
             return await FindAll(trackChanges).FirstOrDefaultAsync(m => m.Id == moduleId);
         }
+
 
         public async Task<IEnumerable<Module>> GetAllModulesAsync()
         {
             return await FindAll().Include(m => m.Course).ToListAsync();
         }
 
+
+        public async Task<IEnumerable<Module>> GetModulesByCourseIdAsync(Guid courseId)
+        {
+            return await FindByCondition(m => m.CourseId == courseId).ToListAsync();
+        }
+
+
         public async Task AddAsync(Module module)
         {
             Create(module);
             await Task.CompletedTask;
         }
+
 
         public void Remove(Module module)
         {
