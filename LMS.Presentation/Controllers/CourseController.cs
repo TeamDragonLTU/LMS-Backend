@@ -30,6 +30,7 @@ namespace LMS.API
             return Ok(await _serviceManager.CourseService.GetAllCoursesAsync());
         }
 
+
         [HttpGet("my")]
         [Authorize]
         [SwaggerOperation(Summary = "Get coursedetails for user", Description = "Returns the users coursedetails")]
