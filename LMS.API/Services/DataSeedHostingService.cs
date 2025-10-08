@@ -71,7 +71,7 @@ public class DataSeedHostingService : IHostedService
 
     private List<Course> GetCourses(int nrOfCourses)
     {
-        var faker = new Faker<Course>().Rules((faker, course) =>
+    var faker = new Faker<Course>("sv").Rules((faker, course) =>
         {
             var currentYear = DateTime.UtcNow.Year;
             var currentMonth = DateTime.UtcNow.Month;
@@ -90,8 +90,23 @@ public class DataSeedHostingService : IHostedService
             var latestStart = new DateTime(startYear, 9, 25);
             course.StartDate = faker.Date.Between(earliestStart, latestStart);
 
-            course.Name = faker.Commerce.Department();
-            course.Description = faker.Commerce.ProductDescription();
+            // IT-teknisk kurslista på svenska
+            var itCourseNames = new[]
+            {
+                "Grundläggande programmering",
+                "Webbutveckling",
+                "Systemarkitektur",
+                "Databasteknik",
+                "Nätverk och säkerhet",
+                "Molntjänster och DevOps",
+                "Mjukvarutestning och kvalitetssäkring",
+                "Maskininlärning för utvecklare",
+                "Programmeringsparadigmer",
+                "Frontend-utveckling med modern JavaScript"
+            };
+
+            course.Name = faker.PickRandom(itCourseNames);
+            course.Description = faker.Lorem.Sentence(8);
 
             var nrOfModules = faker.PickRandom(4, 8);
 
@@ -109,7 +124,7 @@ public class DataSeedHostingService : IHostedService
     private List<Module> GetModules(int nrOfModules, DateTime courseStartDate, DateTime courseEndDate)
     {
         var modules = new List<Module>();
-        var faker = new Faker();
+        var faker = new Faker("sv");
 
         var totalCourseDays = (courseEndDate - courseStartDate).TotalDays;
         var currentDate = courseStartDate;
@@ -151,10 +166,24 @@ public class DataSeedHostingService : IHostedService
                 moduleEndDate = courseEndDate;
             }
 
+            var itModuleNames = new[]
+            {
+                "Introduktion och utvecklingsmiljö",
+                "Versionshantering (Git)",
+                "Datamodellering och SQL",
+                "API-design och REST",
+                "Säkerhet och kryptering",
+                "CI/CD och automatisering",
+                "Prestanda och skalbarhet",
+                "Testdriven utveckling",
+                "Frontend-ramverk och verktyg",
+                "Molnplattformar och deployment"
+            };
+
             var module = new Module
             {
-                Name = faker.Commerce.ProductName(),
-                Description = faker.Commerce.ProductDescription(),
+                Name = faker.PickRandom(itModuleNames),
+                Description = faker.Lorem.Sentence(6),
                 StartDate = moduleStartDate,
                 EndDate = moduleEndDate,
                 Activities = GetActivities(moduleStartDate, moduleEndDate)
@@ -176,7 +205,7 @@ public class DataSeedHostingService : IHostedService
     private List<Activity> GetActivities(DateTime moduleStartDate, DateTime moduleEndDate)
     {
         var activities = new List<Activity>();
-        var faker = new Faker();
+        var faker = new Faker("sv");
 
         var workingDays = new List<DateTime>();
         var currentDate = moduleStartDate.Date;
@@ -263,10 +292,22 @@ public class DataSeedHostingService : IHostedService
 
                 occupiedTimeRanges.Add((randomStartHour, randomStartHour + activityDurationHours));
 
+                var itActivityNames = new[]
+                {
+                    "Kodgenomgång",
+                    "Laboration",
+                    "Kodgranskning",
+                    "Workshop",
+                    "Projektarbete",
+                    "Föreläsning",
+                    "Övning",
+                    "Debug-session"
+                };
+
                 var activity = new Activity
                 {
-                    Name = faker.Commerce.ProductName(),
-                    Description = faker.Commerce.ProductDescription(),
+                    Name = faker.PickRandom(itActivityNames),
+                    Description = faker.Lorem.Sentence(6),
                     StartTime = activityStartTime,
                     EndTime = activityEndTime,
                     ActivityType = _activityTypes[faker.Random.Int(0, _activityTypes.Count - 1)]
