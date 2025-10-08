@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Domain.Contracts.Repositories;
 using Domain.Models.Configurations;
 using Domain.Models.Entities;
 using Domain.Models.Exceptions;
 using LMS.Shared.DTOs.AuthDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Service.Contracts;
@@ -20,19 +22,22 @@ public class AuthService : IAuthService
     private readonly UserManager<ApplicationUser> userManager;
     private readonly RoleManager<IdentityRole> roleManager;
     private readonly JwtSettings jwtSettings;
+    private readonly IUnitOfWork unitOfWork;
     private ApplicationUser? user;
 
     public AuthService(
         IMapper mapper,
         UserManager<ApplicationUser> userManager,
         RoleManager<IdentityRole> roleManager,
-        IOptions<JwtSettings> jwtSettings
+        IOptions<JwtSettings> jwtSettings,
+        IUnitOfWork unitOfWork
         )
     {
         this.mapper = mapper;
         this.userManager = userManager;
         this.roleManager = roleManager;
         this.jwtSettings = jwtSettings.Value;
+        this.unitOfWork = unitOfWork;
     }
 
     public async Task<TokenDto> CreateTokenAsync(bool addTime)
@@ -119,6 +124,10 @@ public class AuthService : IAuthService
         }
 
         var user = mapper.Map<ApplicationUser>(userRegistrationDto);
+        if (userRegistrationDto.CourseId.HasValue)
+        {
+            user.CourseId = userRegistrationDto.CourseId;
+        }
         var result = await userManager.CreateAsync(user, userRegistrationDto.Password);
 
         if (!result.Succeeded) return result;
