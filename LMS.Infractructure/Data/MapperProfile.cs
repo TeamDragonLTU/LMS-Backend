@@ -14,7 +14,7 @@ public class MapperProfile : Profile
 {
     public MapperProfile()
     {
-        CreateMap<UserRegistrationDto, ApplicationUser>();
+        CreateMap<UserRegistrationDto, ApplicationUser>().ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId)); 
 
         CreateMap<Course, CourseDto>();
         CreateMap<Course, CreateCourseDto>().ReverseMap();
